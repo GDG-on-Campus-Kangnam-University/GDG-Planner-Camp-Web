@@ -1,26 +1,20 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  user_id   BigInt    @id @default(autoincrement())
-  password  Int
-  name      String
-  balance   BigInt
-  role      Role
-  team_id   BigInt?
-  team      Team?     @relation(fields: [team_id], references: [team_id])
+  user_id  Int    @id @default(autoincrement())
+  password Int
+  name     String
+  balance  Int
+  role     String
+  team_id  Int?
+  team     Team?  @relation(fields: [team_id], references: [team_id])
 
   purchases Purchase[]
 
@@ -28,49 +22,49 @@ model User {
 }
 
 model Team {
-  team_id    BigInt   @id @default(autoincrement())
+  team_id    Int      @id @default(autoincrement())
   name       String
-  product_id BigInt?
+  product_id Int?
   product    Product? @relation(fields: [product_id], references: [product_id])
 
-  revenue    BigInt
-  users      User[]
-  settings   GlobalSetting?
+  revenue  Int
+  users    User[]
+  settings GlobalSetting?
 
   @@map("team")
 }
 
 model Product {
-  product_id  BigInt   @id @default(autoincrement())
+  product_id  Int    @id @default(autoincrement())
   name        String
   picture     String
-  status      Status
+  status      String
   description String
 
-  models      Model[]
-  teams       Team[]
+  models Model[]
+  teams  Team[]
 
   @@map("product")
 }
 
 model Model {
-  model_id     BigInt   @id @default(autoincrement())
-  name         String
-  total_count  Int
-  price        BigInt
-  description  String
-  product_id   BigInt?
-  product      Product? @relation(fields: [product_id], references: [product_id])
+  model_id    Int      @id @default(autoincrement())
+  name        String
+  total_count Int
+  price       Int
+  description String
+  product_id  Int?
+  product     Product? @relation(fields: [product_id], references: [product_id])
 
-  purchases    Purchase[]
+  purchases Purchase[]
 
   @@map("model")
 }
 
 model Purchase {
-  purchase_id   BigInt   @id @default(autoincrement())
-  user_id       BigInt
-  model_id      BigInt
+  purchase_id   Int      @id @default(autoincrement())
+  user_id       Int
+  model_id      Int
   quantity      Int
   purchase_date DateTime
 
@@ -81,21 +75,11 @@ model Purchase {
 }
 
 model GlobalSetting {
-  id       BigInt @id @default(autoincrement())
-  team_id  BigInt @unique
-  blurred  Boolean
+  id      Int     @id @default(autoincrement())
+  team_id Int     @unique
+  blurred Boolean
 
   team Team @relation(fields: [team_id], references: [team_id])
 
   @@map("global_setting")
-}
-
-enum Role {
-  ADMIN
-  USER
-}
-
-enum Status {
-  ACTIVE
-  INACTIVE
 }

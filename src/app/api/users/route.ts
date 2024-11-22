@@ -1,10 +1,15 @@
-import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
-import { Role } from '@prisma/client';
-
-const prisma = new PrismaClient();
 // src/app/api/users/route.ts
 
+import { PrismaClient } from '@prisma/client';
+import { NextResponse } from 'next/server';
+
+const prisma = new PrismaClient();
+
+// 애플리케이션 레벨에서 Role 타입 정의
+const ALLOWED_ROLES = ['ADMIN', 'USER'] as const;
+type Role = typeof ALLOWED_ROLES[number];
+
+// GET 요청 처리
 export async function GET() {
   try {
     const users = await prisma.user.findMany({
@@ -20,6 +25,7 @@ export async function GET() {
   }
 }
 
+// POST 요청 처리
 export async function POST(request: Request) {
   try {
     const body = await request.json();
@@ -54,7 +60,7 @@ export async function POST(request: Request) {
     }
 
     // Role 값 검증
-    if (!Object.values(Role).includes(role as Role)) {
+    if (!ALLOWED_ROLES.includes(role as Role)) {
       return NextResponse.json(
         { error: '유효하지 않은 역할 값입니다.' },
         { status: 400 }
@@ -63,8 +69,16 @@ export async function POST(request: Request) {
 
     // team_id가 제공된 경우 해당 팀이 존재하는지 확인
     if (team_id !== null && team_id !== undefined) {
+      // team_id가 숫자인지 확인
+      if (typeof team_id !== 'number') {
+        return NextResponse.json(
+          { error: 'team_id는 숫자여야 합니다.' },
+          { status: 400 }
+        );
+      }
+
       const teamExists = await prisma.team.findUnique({
-        where: { team_id: BigInt(team_id) },
+        where: { team_id: team_id },
       });
 
       if (!teamExists) {
@@ -80,9 +94,9 @@ export async function POST(request: Request) {
       data: {
         password,
         name,
-        balance: BigInt(balance),
-        role: role as Role, // Type Assertion 사용
-        team_id: team_id ? BigInt(team_id) : null,
+        balance,
+        role, // 이미 문자열로 처리됨
+        team_id: team_id ? team_id : null,
       },
     });
 
