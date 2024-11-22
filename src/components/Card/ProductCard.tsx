@@ -1,3 +1,5 @@
+'use client'
+
 import { Product } from "@/api/product/model";
 import Image from "next/image";
 

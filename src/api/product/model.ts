@@ -17,8 +17,9 @@ export interface Product {
   rate: number
 }
 
-export interface ProductResult {
-  status: number
-  result: Product[]
+export interface UserData {
+  user_name: string
+  balance: number
+  products: Product[]
 }
 
