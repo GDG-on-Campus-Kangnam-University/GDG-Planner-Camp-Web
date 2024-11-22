@@ -1,9 +1,13 @@
 // src/app/api/users/route.ts
 
-import { PrismaClient } from '@prisma/client';
+import prisma from '@/lib/prisma';
+
 import { NextResponse } from 'next/server';
 
-const prisma = new PrismaClient();
+import bcrypt from 'bcrypt';
+import { NextRequest } from 'next/server';
+import { authenticate } from '@/middleware/auth'; // 미들웨어 경로에 따라 수정
+
 
 // 애플리케이션 레벨에서 Role 타입 정의
 const ALLOWED_ROLES = ['ADMIN', 'USER'] as const;
@@ -26,18 +30,36 @@ export async function GET() {
 }
 
 // POST 요청 처리
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
+    // 사용자 인증
+    const user = await authenticate(request);
+
+    if (!user) {
+      return NextResponse.json(
+        { error: '인증되지 않은 사용자입니다.' },
+        { status: 401 }
+      );
+    }
+
+    // 인가: ADMIN 역할 확인
+    if (user.role !== 'ADMIN') {
+      return NextResponse.json(
+        { error: '접근 권한이 없습니다.' },
+        { status: 403 }
+      );
+    }
+
     const body = await request.json();
-    console.log('POST request body:', body); // 디버그용 로그
+    console.log('POST /api/users request body:', body); // 디버그용 로그
 
-    const { password, name, balance, role, team_id } = body;
+    const { user_id, password, name, role, team_id } = body;
 
-    // 필수 필드 검증
+    // 필수 필드 검증: user_id, password, name, role
     if (
+      user_id === undefined ||
       password === undefined ||
       name === undefined ||
-      balance === undefined ||
       role === undefined
     ) {
       return NextResponse.json(
@@ -48,9 +70,9 @@ export async function POST(request: Request) {
 
     // 데이터 타입 검증
     if (
-      typeof password !== 'number' ||
+      typeof user_id !== 'number' ||
+      typeof password !== 'string' ||
       typeof name !== 'string' ||
-      typeof balance !== 'number' ||
       typeof role !== 'string'
     ) {
       return NextResponse.json(
@@ -69,10 +91,9 @@ export async function POST(request: Request) {
 
     // team_id가 제공된 경우 해당 팀이 존재하는지 확인
     if (team_id !== null && team_id !== undefined) {
-      // team_id가 숫자인지 확인
-      if (typeof team_id !== 'number') {
+      if (typeof team_id !== 'string') {
         return NextResponse.json(
-          { error: 'team_id는 숫자여야 합니다.' },
+          { error: 'team_id는 문자열이어야 합니다.' },
           { status: 400 }
         );
       }
@@ -89,18 +110,38 @@ export async function POST(request: Request) {
       }
     }
 
+    // 이미 존재하는 user_id인지 확인
+    const existingUser = await prisma.user.findUnique({
+      where: { user_id: user_id },
+    });
+
+    if (existingUser) {
+      return NextResponse.json(
+        { error: '이미 존재하는 회원입니다.' },
+        { status: 409 }
+      );
+    }
+
+    // 비밀번호 해시화
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     // 새로운 유저 생성
     const newUser = await prisma.user.create({
       data: {
-        password,
+        user_id,
+        password: hashedPassword, // 해시된 비밀번호 저장
         name,
-        balance,
         role, // 이미 문자열로 처리됨
         team_id: team_id ? team_id : null,
+        // balance는 기본값이 있으므로 생략
       },
     });
 
-    return NextResponse.json(newUser, { status: 201 });
+    // 성공 메시지 반환
+    return NextResponse.json(
+      { message: 'User created successfully', newUser },
+      { status: 201 }
+    );
   } catch (error: any) {
     console.error('유저 생성 오류:', error);
 
@@ -108,7 +149,7 @@ export async function POST(request: Request) {
     if (error.code === 'P2002') {
       // unique constraint failed
       return NextResponse.json(
-        { error: '이미 존재하는 유저입니다.' },
+        { error: '이미 존재하는 회원입니다.' },
         { status: 409 }
       );
     }
@@ -116,3 +157,4 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: '서버 오류' }, { status: 500 });
   }
 }
+

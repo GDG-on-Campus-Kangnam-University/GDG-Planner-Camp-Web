@@ -8,13 +8,13 @@ datasource db {
 }
 
 model User {
-  user_id  Int    @id @default(autoincrement())
-  password Int
+  user_id  Int     @id
+  password String
   name     String
-  balance  Int
+  balance  Int     @default(100000)
   role     String
-  team_id  Int?
-  team     Team?  @relation(fields: [team_id], references: [team_id])
+  team_id  String? // 변경: Int -> String
+  team     Team?   @relation(fields: [team_id], references: [team_id])
 
   purchases Purchase[]
 
@@ -22,64 +22,64 @@ model User {
 }
 
 model Team {
-  team_id    Int      @id @default(autoincrement())
+  team_id    String      @id @default(uuid())
   name       String
-  product_id Int?
-  product    Product? @relation(fields: [product_id], references: [product_id])
+  product_id String?     @unique
+  product    Product?    @relation(fields: [product_id], references: [product_id])
 
-  revenue  Int
-  users    User[]
-  settings GlobalSetting?
+  revenue    Int         @default(0)
+  users      User[]
+  settings   GlobalSetting?
 
   @@map("team")
 }
 
 model Product {
-  product_id  Int    @id @default(autoincrement())
+  product_id  String   @id @default(uuid())
   name        String
   picture     String
   status      String
   description String
 
-  models Model[]
-  teams  Team[]
+  models      Model[]
+  teams       Team[]
 
   @@map("product")
 }
 
 model Model {
-  model_id    Int      @id @default(autoincrement())
+  model_id    String   @id @default(uuid())
   name        String
   total_count Int
   price       Int
   description String
-  product_id  Int?
+  product_id  String?
   product     Product? @relation(fields: [product_id], references: [product_id])
 
-  purchases Purchase[]
+  purchases   Purchase[]
 
   @@map("model")
 }
 
 model Purchase {
-  purchase_id   Int      @id @default(autoincrement())
+  purchase_id   String   @id @default(uuid())
   user_id       Int
-  model_id      Int
+  model_id      String
   quantity      Int
   purchase_date DateTime
 
-  user  User  @relation(fields: [user_id], references: [user_id])
-  model Model @relation(fields: [model_id], references: [model_id])
+  user   User   @relation(fields: [user_id], references: [user_id])
+  model  Model  @relation(fields: [model_id], references: [model_id])
 
   @@map("purchase")
 }
 
 model GlobalSetting {
-  id      Int     @id @default(autoincrement())
-  team_id Int     @unique
+  id      String @id @default(uuid())
+  team_id String @unique
   blurred Boolean
 
-  team Team @relation(fields: [team_id], references: [team_id])
+  team    Team   @relation(fields: [team_id], references: [team_id])
 
   @@map("global_setting")
 }
