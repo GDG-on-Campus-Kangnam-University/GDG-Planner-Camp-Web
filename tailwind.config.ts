@@ -65,7 +65,26 @@ export default {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
-  		}
+  		},
+			keyframes: {
+        fall: {
+          '0%': { transform: 'translateY(0)' },
+          '100%': { transform: 'translateY(var(--finalY))' },
+        },
+				slideUp: {
+					'0%': { transform: 'translateY(100%)' },
+					'100%': { transform: 'translateY(0)' }
+				},
+				slideDown: {
+					'0%': { transform: 'translateY(0)' },
+					'100%': { transform: 'translateY(100%)' }
+				}
+      },
+      animation: {
+        fall: 'fall linear forwards',
+				slideUp: 'slideUp 0.3s ease-out',
+				slideDown: 'slideDown 0.3s ease-out'
+      },
   	}
   },
   plugins: [require("tailwindcss-animate")],
