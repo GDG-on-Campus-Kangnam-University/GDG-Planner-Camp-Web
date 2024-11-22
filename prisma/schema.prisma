@@ -22,27 +22,29 @@ model User {
 }
 
 model Team {
-  team_id    String      @id @default(uuid())
+  team_id    String  @id @default(uuid())
   name       String
-  product_id String?     @unique
-  product    Product?    @relation(fields: [product_id], references: [product_id])
+  product_id String? @unique
 
-  revenue    Int         @default(0)
-  users      User[]
-  settings   GlobalSetting?
+  revenue  Int            @default(0)
+  users    User[]
+  products Product[]
+  settings GlobalSetting?
 
   @@map("team")
 }
 
 model Product {
-  product_id  String   @id @default(uuid())
+  product_id  String @id @default(uuid())
   name        String
   picture     String
   status      String
   description String
 
-  models      Model[]
-  teams       Team[]
+  team_id String?
+  team    Team?   @relation(fields: [team_id], references: [team_id])
+
+  models Model[]
 
   @@map("product")
 }
@@ -56,7 +58,7 @@ model Model {
   product_id  String?
   product     Product? @relation(fields: [product_id], references: [product_id])
 
-  purchases   Purchase[]
+  purchases Purchase[]
 
   @@map("model")
 }
@@ -68,18 +70,18 @@ model Purchase {
   quantity      Int
   purchase_date DateTime
 
-  user   User   @relation(fields: [user_id], references: [user_id])
-  model  Model  @relation(fields: [model_id], references: [model_id])
+  user  User  @relation(fields: [user_id], references: [user_id])
+  model Model @relation(fields: [model_id], references: [model_id])
 
   @@map("purchase")
 }
 
 model GlobalSetting {
-  id      String @id @default(uuid())
-  team_id String @unique
+  id      String  @id @default(uuid())
+  team_id String  @unique
   blurred Boolean
 
-  team    Team   @relation(fields: [team_id], references: [team_id])
+  team Team @relation(fields: [team_id], references: [team_id])
 
   @@map("global_setting")
 }
