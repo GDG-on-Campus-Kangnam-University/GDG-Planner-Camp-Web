@@ -3,7 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 
 const geistNotoSansKR = localFont({
-  src: "../../public/font/NotoSansKR.ttf",
+  src: "../../public/fonts/NotoSansKR.ttf",
   variable: "--font-geist-NotoSansKR",
   weight: "100 900",
 });
@@ -21,7 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistNotoSansKR.variable} antialiased`}
+        className={`${geistNotoSansKR.variable} h-screen antialiased`}
       >
         {children}
       </body>

@@ -1,8 +1,7 @@
-// src/middleware/auth.ts
+// /src/middleware/auth.ts
 
-import { NextRequest, NextResponse } from 'next/server';
-import jwt from 'jsonwebtoken';
 import { PrismaClient } from '@prisma/client';
+import jwt from 'jsonwebtoken';
 
 const prisma = new PrismaClient();
 
@@ -13,7 +12,7 @@ interface JwtPayload {
   exp: number;
 }
 
-export async function authenticate(req: NextRequest): Promise<JwtPayload | null> {
+export async function authenticate(req: Request): Promise<JwtPayload | null> {
   const authHeader = req.headers.get('Authorization');
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
