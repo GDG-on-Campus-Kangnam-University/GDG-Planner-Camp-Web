@@ -9,10 +9,10 @@ import { z } from 'zod'
 
 const formSchema = z.object({
   studentId: z.string({
-    required_error: 'StudentId is required',
+    required_error: '학번을 입력해주세요.',
   }),
   password: z.string({
-    required_error: 'Password is required',
+    required_error: '비밀번호를 입력해주세요.',
   }),
 })
 
