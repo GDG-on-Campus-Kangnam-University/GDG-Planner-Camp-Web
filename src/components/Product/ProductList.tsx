@@ -1,14 +1,15 @@
 'use client'
 
-import { InitialProducts } from '@/app/(after)/user/home/page'
+import { InitialProducts } from '@/app/(after)/(user)/product/page'
+import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 import { ProductCard } from '../Card/ProductCard'
 
-interface ProductListProps {
+export default function ProductList({
+  initialProducts,
+}: {
   initialProducts: InitialProducts
-}
-
-export default function ProductList({ initialProducts }: ProductListProps) {
+}) {
   const [products, setProducts] = useState(initialProducts)
   const [isLoading, setIsLoading] = useState(false)
   const [page, setPage] = useState(0)
@@ -48,8 +49,10 @@ export default function ProductList({ initialProducts }: ProductListProps) {
   }, [page])
   return (
     <div className="grid grid-cols-3 gap-x-1.5 gap-y-6">
-      {products.map((product: any) => (
-        <ProductCard key={product.id} {...product} />
+      {products.map((product) => (
+        <Link href={`/product/${product.product_id}`}>
+          <ProductCard key={product.product_id} {...product} />
+        </Link>
       ))}
       {/* {!isLastPage ? (
         <span

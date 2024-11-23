@@ -28,7 +28,7 @@ export async function middleware(request: NextRequest) {
       return NextResponse.next()
     } else if (role === 'user') {
       if (isAdminPath) {
-        return NextResponse.redirect(new URL('/user/home', request.url))
+        return NextResponse.redirect(new URL('/product', request.url))
       }
       return NextResponse.next()
     } else {
