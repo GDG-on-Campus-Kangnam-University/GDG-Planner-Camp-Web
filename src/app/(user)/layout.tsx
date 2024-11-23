@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
-import GDGLogo from '../../../../public/images/GDG_Logo.png'
+import GDGLogo from '../../../public/images/GDG_Logo.png'
 
 const UserLayout = ({ children }: { children: React.ReactNode }) => {
   return (
