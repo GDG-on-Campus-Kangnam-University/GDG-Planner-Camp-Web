@@ -63,7 +63,7 @@ export default function LoginPage() {
   return (
     <div className="flex w-full h-screen items-center justify-center bg-slate-100">
       <div className="flex flex-col items-center justify-center gap-[469.8px] bg-white max-w-[600px] w-full h-full">
-        <Image src='/image/gdg_icon.svg' alt="gdg_icon" width={248} height={144}/>
+        <Image src='/image/gdg_logo.gif' alt="gdg_icon" width={248} height={144}/>
         <form className="flex w-[280px] flex-col gap-20" onSubmit={handleSubmit(onSubmit)}>
           <div className="flex flex-col gap-4">
             <Input type="text" placeholder="학번" {...register("studentId", { required: "학번을 입력해주세요" })}/>
