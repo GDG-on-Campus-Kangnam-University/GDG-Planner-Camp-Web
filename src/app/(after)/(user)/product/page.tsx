@@ -3,6 +3,7 @@ import ProductList from '@/components/Product/ProductList'
 import db from '@/lib/db'
 import getSession from '@/lib/sessions'
 import { Prisma } from '@prisma/client'
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
 // const getCachedProducts = nextCache(getInitialProducts, ['home-products'])
@@ -59,6 +60,12 @@ const UserHomePage = async () => {
       <UserDepositCard user={user} />
       <hr />
       <ProductList initialProducts={initialProducts} />
+
+      <Link href="/statistics">
+        <div className="fixed bottom-4 right-4 rounded-full bg-blue-600 p-4 text-white shadow-lg transition-colors hover:bg-blue-700">
+          통계 페이지
+        </div>
+      </Link>
     </section>
   )
 }
