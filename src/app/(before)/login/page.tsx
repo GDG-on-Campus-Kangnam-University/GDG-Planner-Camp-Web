@@ -6,54 +6,74 @@ import FireworksCanvas, {
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import Image from 'next/image'
-import { useRef } from 'react'
-import { useFormState } from 'react-dom'
+import { useRouter } from 'next/navigation'
+import { useRef, useState } from 'react'
+import { useFormStatus } from 'react-dom' // Next.js 13에서 사용 가능
 import { logIn } from './actions'
 
 export default function LoginPage() {
-  const [state, dispatch] = useFormState(logIn, null)
-
+  const [fieldErrors, setFieldErrors] = useState<any>(null)
+  const [loginSuccess, setLoginSuccess] = useState(false)
   const fireworksRef = useRef<FireworksCanvasHandle>(null)
-  const buttonRef = useRef<HTMLButtonElement>(null) // 로그인 버튼에 대한 Ref
-  const containerRef = useRef<HTMLDivElement>(null) // 컨테이너에 대한 Ref
+  const containerRef = useRef<HTMLDivElement>(null)
+  const router = useRouter()
 
-  if (fireworksRef.current && containerRef.current) {
-    const containerRect = containerRef.current.getBoundingClientRect()
+  const handleSuccess = () => {
+    setLoginSuccess(true)
 
-    const x = containerRect.width / 2 // 컨테이너의 중앙 x 좌표
-    const y = containerRect.height - 10 // 컨테이너 하단 근처 y 좌표
+    if (fireworksRef.current && containerRef.current) {
+      const containerRect = containerRef.current.getBoundingClientRect()
 
-    // Step 1: Immediately create 1 pop
-    fireworksRef.current.createFireworkAt(x, y, 1)
+      const x = containerRect.width / 2
+      const y = containerRect.height - 10
 
-    // Step 2: After 1 second, create 2 pops
-    setTimeout(() => {
-      fireworksRef.current?.createFireworkAt(x, y, 2)
-    }, 1000)
+      // 애니메이션 단계별 트리거
+      fireworksRef.current.createFireworkAt(x, y, 1)
 
-    // Step 3: After 2 seconds, create 50 pops
-    setTimeout(() => {
-      fireworksRef.current?.createFireworkAt(x, y, 10)
-    }, 1500)
+      setTimeout(() => {
+        fireworksRef.current?.createFireworkAt(x, y, 2)
+      }, 1000)
 
-    setTimeout(() => {
-      fireworksRef.current?.createFireworkAt(x, y, 20)
-    }, 2500)
+      setTimeout(() => {
+        fireworksRef.current?.createFireworkAt(x, y, 4)
+      }, 1500)
 
-    setTimeout(() => {
-      fireworksRef.current?.createFireworkAt(x, y, 30)
-    }, 2700)
+      setTimeout(() => {
+        fireworksRef.current?.createFireworkAt(x, y, 8)
+      }, 2000)
 
-    setTimeout(() => {
-      fireworksRef.current?.createFireworkAt(x, y, 40)
-    }, 3000)
+      setTimeout(() => {
+        fireworksRef.current?.createFireworkAt(x, y, 16)
+      }, 2500)
+
+      setTimeout(() => {
+        fireworksRef.current?.createFireworkAt(x, y, 32)
+      }, 2700)
+
+      setTimeout(() => {
+        fireworksRef.current?.createFireworkAt(x, y, 32)
+      }, 3000)
+
+      setTimeout(() => {
+        fireworksRef.current?.createFireworkAt(x, y, 64)
+      }, 3300)
+
+      setTimeout(() => {
+        fireworksRef.current?.createFireworkAt(x, y, 64)
+      }, 3500)
+
+      // 애니메이션 후 리다이렉트
+      setTimeout(() => {
+        router.push('/product')
+      }, 4500)
+    }
   }
 
   return (
     <div className="flex h-screen w-full items-center justify-center bg-slate-100">
       <div
-        className="relative flex h-full w-full max-w-[600px] flex-col items-center justify-center rounded bg-white p-8 shadow-lg"
-        ref={containerRef} // 컨테이너에 Ref 할당
+        className="relative flex h-full w-full max-w-[600px] flex-col items-center justify-center gap-[200px] rounded bg-white p-8 shadow-lg"
+        ref={containerRef}
       >
         <FireworksCanvas ref={fireworksRef} />
 
@@ -63,30 +83,49 @@ export default function LoginPage() {
           width={248}
           height={144}
         />
-        <form className="flex w-[280px] flex-col gap-20" action={dispatch}>
-          <div className="flex flex-col gap-4">
-            <Input type="text" placeholder="학번" name="studentId" required />
-            <Input
-              type="password"
-              placeholder="비밀번호"
-              name="password"
-              required
-            />
-            {state?.fieldErrors && (
-              <p className="text-red-500">
-                {state?.fieldErrors.studentId || state?.fieldErrors.password}
-              </p>
-            )}
-          </div>
-          <Button
-            type="submit"
-            className="w-full bg-blue-500 hover:bg-blue-400"
-            ref={buttonRef}
+        {!loginSuccess && (
+          <form
+            className="flex w-[280px] flex-col gap-20"
+            action={async (formData) => {
+              const result = await logIn(formData)
+              if (result.success) {
+                handleSuccess()
+              } else {
+                setFieldErrors(result.fieldErrors)
+              }
+            }}
           >
-            로그인
-          </Button>
-        </form>
+            <div className="flex flex-col gap-4">
+              <Input type="text" placeholder="학번" name="studentId" required />
+              <Input
+                type="password"
+                placeholder="비밀번호"
+                name="password"
+                required
+              />
+              {fieldErrors && (
+                <p className="text-red-500">
+                  {fieldErrors.studentId?.[0] || fieldErrors.password?.[0]}
+                </p>
+              )}
+            </div>
+            <SubmitButton />
+          </form>
+        )}
       </div>
     </div>
+  )
+}
+
+function SubmitButton() {
+  const { pending } = useFormStatus()
+  return (
+    <Button
+      type="submit"
+      className="w-full bg-blue-500 hover:bg-blue-400"
+      disabled={pending} // 로그인 진행 중 버튼 비활성화
+    >
+      {pending ? '로그인 중...' : '로그인'}
+    </Button>
   )
 }
