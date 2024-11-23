@@ -70,6 +70,20 @@ export default {
   			sm: 'calc(var(--radius) - 4px)'
   		},
 			keyframes: {
+				explode: {
+					'0%': {
+					  transform: 'translate(-50%, -50%) scale(0)',
+					  opacity: '1',
+					},
+					'100%': {
+					  transform: 'translate(-50%, -50%) scale(2)',
+					  opacity: '0',
+					},
+				  },
+				  rotate: {
+					'0%': { transform: 'rotate(0deg)' },
+					'100%': { transform: 'rotate(360deg)' },
+				  },
         fall: {
           '0%': { transform: 'translateY(0)' },
           '100%': { transform: 'translateY(var(--finalY))' },
@@ -84,6 +98,8 @@ export default {
 				}
       },
       animation: {
+		explode: 'explode 1s ease-out forwards',
+        rotate: 'rotate 1s linear forwards',
         fall: 'fall linear forwards',
 				slideUp: 'slideUp 0.3s ease-out',
 				slideDown: 'slideDown 0.3s ease-out'
