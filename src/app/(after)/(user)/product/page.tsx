@@ -14,7 +14,6 @@ async function getInitialProducts() {
       name: true,
       picture: true,
       status: true,
-      description: true,
       team: {
         select: {
           team_id: true,

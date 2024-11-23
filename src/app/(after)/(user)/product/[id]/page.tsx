@@ -19,14 +19,6 @@ export default function ProductDetailPage() {
   return (
     <div className="flex h-screen items-center justify-center bg-slate-100">
       <div className="flex h-full w-full max-w-[600px] flex-col justify-center gap-2 bg-white px-3">
-        <div className="flex border-b border-b-slate-100 px-6 py-4">
-          <Image
-            src="/image/gdg_icon.svg"
-            alt="gdg_icon"
-            width={46}
-            height={27}
-          />
-        </div>
         <Image
           src="/image/gdg_icon.svg"
           alt="empty"
