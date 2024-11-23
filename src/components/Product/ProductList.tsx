@@ -1,6 +1,6 @@
 'use client'
 
-import { InitialProducts } from '@/app/(after)/(user)/product/page'
+import { InitialProducts } from '@/app/(user)/product/page'
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 import { ProductCard } from '../Card/ProductCard'
