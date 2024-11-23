@@ -4,7 +4,6 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 
-// POST 로그인 요청 처리
 export async function POST(request: Request) {
   try {
     const body = await request.json();
@@ -12,7 +11,6 @@ export async function POST(request: Request) {
 
     const { user_id, password } = body;
 
-    // 필수 필드 검증
     if (!user_id || !password) {
       return NextResponse.json(
         { error: 'user_id와 password는 필수 입력 항목입니다.' },
@@ -20,7 +18,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // 데이터 타입 검증
     if (
       (typeof user_id !== 'number' && typeof user_id !== 'string') ||
       typeof password !== 'string'
@@ -31,7 +28,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // 사용자 존재 여부 확인
     const user = await prisma.user.findUnique({
       where: { user_id: typeof user_id === 'string' ? parseInt(user_id) : user_id },
     });
