@@ -1,10 +1,10 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  /* config options here */
+// next.config.js
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   images: {
-    domains: ['example.com', "www.notion.so"],
-  }
-};
+    domains: ['images.unsplash.com', 'plus.unsplash.com'],
+  },
+  // 기타 설정...
+}
 
-export default nextConfig;
+module.exports = nextConfig

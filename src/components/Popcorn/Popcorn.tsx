@@ -1,6 +1,6 @@
 // components/Popcorn.tsx
-import { useState } from 'react'
 import Image from 'next/image'
+import { useState } from 'react'
 
 interface Explosion {
   id: number
@@ -54,7 +54,7 @@ const Popcorn: React.FC<PopcornProps> = ({ src, alt }) => {
             alt={alt}
             width={50}
             height={50}
-            className="animate-explode animate-rotate"
+            className="animate-explode"
             style={{
               transform: `rotate(${exp.rotation}deg) scale(${exp.scale})`,
             }}
