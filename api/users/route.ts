@@ -1,19 +1,16 @@
-// src/app/api/users/route.ts
+// src/app/api/admin/users/route.ts
 
 import prisma from '@/lib/prisma';
-
 import { NextResponse } from 'next/server';
-
 import bcrypt from 'bcrypt';
 import { NextRequest } from 'next/server';
 import { authenticate } from '@/middleware/auth'; // 미들웨어 경로에 따라 수정
-
 
 // 애플리케이션 레벨에서 Role 타입 정의
 const ALLOWED_ROLES = ['ADMIN', 'USER'] as const;
 type Role = typeof ALLOWED_ROLES[number];
 
-// GET 요청 처리
+// GET 요청 처리: 모든 사용자 목록 조회
 export async function GET() {
   try {
     const users = await prisma.user.findMany({
@@ -29,7 +26,7 @@ export async function GET() {
   }
 }
 
-// POST 요청 처리
+// POST 요청 처리: 새로운 사용자 생성
 export async function POST(request: NextRequest) {
   try {
     // 사용자 인증
@@ -51,7 +48,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    console.log('POST /api/users request body:', body); // 디버그용 로그
+    console.log('POST /api/admin/users request body:', body); // 디버그용 로그
 
     const { user_id, password, name, role, team_id } = body;
 
@@ -157,4 +154,3 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: '서버 오류' }, { status: 500 });
   }
 }
-
