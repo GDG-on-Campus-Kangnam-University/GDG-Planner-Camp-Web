@@ -1,7 +1,8 @@
+// actions.ts
 'use server'
 
 import db from '@/lib/db'
-import getSession from '@/lib/sessions'
+import getSession, { UserRole } from '@/lib/sessions'
 import bcrypt from 'bcrypt'
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
@@ -33,12 +34,13 @@ export async function logIn(prevState: any, formData: FormData) {
     if (isNaN(parsedStudentId)) {
       return {
         fieldErrors: {
-          studentId: ['올바르지 않은 학번입니다.'],
+          studentId: ['StudentId must be a valid number.'],
           password: [],
         },
       }
     }
 
+    // 사용자 조회 시 역할 정보도 가져오기
     const user = await db.user.findUnique({
       where: {
         user_id: parsedStudentId,
@@ -46,23 +48,28 @@ export async function logIn(prevState: any, formData: FormData) {
       select: {
         user_id: true,
         password: true,
+        role: true, // 역할 정보 추가
       },
     })
 
     if (!user) {
       return {
         fieldErrors: {
-          studentId: ['등록되지 않은 사용자입니다.'],
+          studentId: ['User not found.'],
           password: [],
         },
       }
     }
 
+    // 비밀번호 비교
     const ok = await bcrypt.compare(password, user.password ?? 'xxxx')
 
     if (ok) {
       const session = await getSession()
-      session.id = user.user_id
+      session.user = {
+        id: user.user_id,
+        role: (user.role as string).toLowerCase() as UserRole,
+      }
       await session.save()
       redirect('/')
     } else {
