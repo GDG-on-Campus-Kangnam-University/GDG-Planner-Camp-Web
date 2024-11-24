@@ -11,8 +11,15 @@ import { useRef, useState } from 'react'
 import { useFormStatus } from 'react-dom' // Next.js 13에서 사용 가능
 import { logIn } from './actions'
 
-export default function LoginPage() {
-  const [fieldErrors, setFieldErrors] = useState<any>(null)
+interface fieldErrors {
+  studentId?: string[] | undefined
+  password?: string[] | undefined
+}
+
+const LoginPage = () => {
+  const [fieldErrors, setFieldErrors] = useState<fieldErrors | undefined>(
+    undefined,
+  )
   const [loginSuccess, setLoginSuccess] = useState(false)
   const fireworksRef = useRef<FireworksCanvasHandle>(null)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -117,7 +124,7 @@ export default function LoginPage() {
   )
 }
 
-function SubmitButton() {
+const SubmitButton = () => {
   const { pending } = useFormStatus()
   return (
     <Button
@@ -129,3 +136,5 @@ function SubmitButton() {
     </Button>
   )
 }
+
+export default LoginPage

@@ -1,12 +1,20 @@
 'use client'
 
-import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell } from 'recharts';
+import { SalesData } from '@/app/(user)/statistics/page'
+import {
+  Bar,
+  BarChart,
+  Cell,
+  ResponsiveContainer,
+  XAxis,
+  YAxis,
+} from 'recharts'
 
 const data = {
-  name: "신홍기",
+  name: '신홍기',
   balance: 100000,
   user_id: 202204133,
-  team_id: 1
+  team_id: 1,
 }
 
 export const TeamChart = (salesData: SalesData) => {
@@ -19,7 +27,7 @@ export const TeamChart = (salesData: SalesData) => {
           {salesData.teams.map((entry, index) => (
             <Cell
               key={`cell-${index}`}
-              fill={entry.team_id === data.team_id ? "#4285F4" : "#0F172A"}
+              fill={entry.team_id === data.team_id ? '#4285F4' : '#0F172A'}
             />
           ))}
         </Bar>

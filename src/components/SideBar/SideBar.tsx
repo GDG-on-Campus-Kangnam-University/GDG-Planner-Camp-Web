@@ -51,7 +51,7 @@ const user = [
   },
 ]
 
-export function AppSidebar() {
+export const AppSidebar = () => {
   return (
     <Sidebar>
       <SidebarContent>

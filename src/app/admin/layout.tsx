@@ -1,7 +1,7 @@
 import { AppSidebar } from '@/components/SideBar/SideBar'
 import { SidebarProvider } from '@/components/ui/sidebar'
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <SidebarProvider>
       <div className="flex w-screen">
@@ -11,3 +11,5 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     </SidebarProvider>
   )
 }
+
+export default Layout

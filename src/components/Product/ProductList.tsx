@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client'
 
 import { InitialProducts } from '@/app/(user)/product/page'
@@ -5,11 +6,11 @@ import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 import { ProductCard } from '../Card/ProductCard'
 
-export default function ProductList({
+export const ProductList = ({
   initialProducts,
 }: {
   initialProducts: InitialProducts
-}) {
+}) => {
   const [products, setProducts] = useState(initialProducts)
   const [isLoading, setIsLoading] = useState(false)
   const [page, setPage] = useState(0)
@@ -50,8 +51,8 @@ export default function ProductList({
   return (
     <div className="grid grid-cols-3 gap-x-1.5 gap-y-6">
       {products.map((product) => (
-        <Link href={`/product/${product.product_id}`}>
-          <ProductCard key={product.product_id} {...product} />
+        <Link href={`/product/${product.product_id}`} key={product.product_id}>
+          <ProductCard {...product} />
         </Link>
       ))}
       {/* {!isLastPage ? (

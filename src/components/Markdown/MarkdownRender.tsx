@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 // components/MarkdownRenderer.jsx
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'

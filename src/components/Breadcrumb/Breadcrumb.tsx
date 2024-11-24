@@ -7,7 +7,7 @@ import {
 } from '@/components/ui/breadcrumb'
 import { Layers3 } from 'lucide-react'
 
-export function BreadcrumbDemo() {
+export const BreadcrumbDemo = () => {
   return (
     <Breadcrumb>
       <BreadcrumbList>
