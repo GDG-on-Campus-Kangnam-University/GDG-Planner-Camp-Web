@@ -1,4 +1,9 @@
 import { BreadcrumbDemo } from '@/components/Breadcrumb/Breadcrumb'
+import {
+  PostProductModalControl,
+  ProductFormData,
+  ProductStatus,
+} from '@/components/Modal/PostProductModal'
 import { DataTable } from '@/components/Table/DataTable'
 import { productColumns, ProductTable } from '@/components/Table/ProductColumn'
 import { Button } from '@/components/ui/button'
@@ -34,9 +39,7 @@ const page = async () => {
       <BreadcrumbDemo />
       <div className="flex">
         <h1 className="flex-1 text-[24px] font-semibold">프로덕트</h1>
-        <Button className="w-40 bg-blue-500 px-3 hover:bg-blue-400">
-          <p className="text-sm">추가하기</p>
-        </Button>
+        <PostProductModalControl />
       </div>
       <DataTable columns={productColumns} data={data} />
     </div>

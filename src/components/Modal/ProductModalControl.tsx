@@ -4,6 +4,7 @@
 import { useState } from 'react'
 import { Button } from '../ui/button'
 import { BuyModal } from './BuyModal'
+import { PostProductModal } from './PostProductModal'
 
 const ProductModal = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -18,16 +19,14 @@ const ProductModal = () => {
 
   return (
     <>
-      <div className="fixed bottom-0 w-[600px] bg-white px-6 py-3">
-        <Button
-          type="button"
-          onClick={openModal}
-          className="w-full bg-blue-500 hover:bg-blue-400"
-        >
-          제품 구매하기
-        </Button>
-      </div>
-      {isModalOpen && <BuyModal closeModal={closeModal} />}
+      <Button
+        type="button"
+        onClick={openModal}
+        className="w-full bg-blue-500 hover:bg-blue-400"
+      >
+        제품 구매하기
+      </Button>
+      {isModalOpen && <PostProductModal closeModal={closeModal} />}
     </>
   )
 }
