@@ -3,12 +3,11 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
-  BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
 import { Layers3 } from 'lucide-react'
 
-export function BreadcrumbDemo({ selectedItem }: { selectedItem: string }) {
+export function BreadcrumbDemo() {
   return (
     <Breadcrumb>
       <BreadcrumbList>
@@ -17,11 +16,11 @@ export function BreadcrumbDemo({ selectedItem }: { selectedItem: string }) {
           <BreadcrumbLink href="/">Home</BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
-        {selectedItem !== 'Home' && (
+        {/* {selectedItem !== 'Home' && (
           <BreadcrumbItem>
             <BreadcrumbPage>{selectedItem}</BreadcrumbPage>
           </BreadcrumbItem>
-        )}
+        )} */}
       </BreadcrumbList>
     </Breadcrumb>
   )
