@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import { Button } from '../ui/button'
 import { BuyModal } from './BuyModal'
-import { PostProductModal } from './PostProductModal'
 
 const ProductModal = ({ id }: { id: string }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)

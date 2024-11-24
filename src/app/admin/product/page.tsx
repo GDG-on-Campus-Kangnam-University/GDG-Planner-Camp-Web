@@ -1,12 +1,7 @@
 import { BreadcrumbDemo } from '@/components/Breadcrumb/Breadcrumb'
-import {
-  PostProductModalControl,
-  ProductFormData,
-  ProductStatus,
-} from '@/components/Modal/PostProductModal'
+import { PostProductModalControl } from '@/components/Modal/PostProductModal'
 import { DataTable } from '@/components/Table/DataTable'
 import { productColumns, ProductTable } from '@/components/Table/ProductColumn'
-import { Button } from '@/components/ui/button'
 import db from '@/lib/db'
 
 async function getData(): Promise<ProductTable[]> {
