@@ -49,8 +49,8 @@ export default function ProductList({
   }, [page])
   return (
     <div className="grid grid-cols-3 gap-x-1.5 gap-y-6">
-      {products.map((product) => (
-        <Link href={`/product/${product.product_id}`}>
+      {products.map((product, idx) => (
+        <Link key={idx} href={`/product/${product.product_id}`}>
           <ProductCard key={product.product_id} {...product} />
         </Link>
       ))}

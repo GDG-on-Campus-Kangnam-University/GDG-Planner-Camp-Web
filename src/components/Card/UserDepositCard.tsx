@@ -19,7 +19,7 @@ const UserDepositCard = ({ user }: { user: User }) => {
   // user 변경되면 balance를 업데이트
   useEffect(() => {
     if (user) {
-      setBalance({ prev: user.balance, cur: user.balance })
+      setBalance({ prev: balance.cur, cur: user.balance })
     }
   }, [user]) // data가 바뀔 때마다 실행
 
