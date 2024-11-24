@@ -33,7 +33,7 @@ const page = async () => {
     <div className="flex w-full flex-col gap-7 px-6 py-3">
       <BreadcrumbDemo />
       <div className="flex">
-        <h1 className="flex-1 text-[24px] font-semibold">프로덕트</h1>
+        <h1 className="flex-1 text-[24px] font-semibold">프로덕트 상세</h1>
         <Button className="w-40 bg-blue-500 px-3 hover:bg-blue-400">
           <p className="text-sm">추가하기</p>
         </Button>

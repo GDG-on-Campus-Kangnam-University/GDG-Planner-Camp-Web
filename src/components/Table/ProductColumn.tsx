@@ -15,17 +15,18 @@ import {
 import { ColumnDef } from '@tanstack/react-table'
 
 import { Button } from '@/components/ui/button'
+import Link from 'next/link'
 import { Checkbox } from '../ui/checkbox'
 
 export type ProductTable = {
   id: string
   name: string
-  team_id: string
+  team_id: string | null
   status: 'selling' | 'sold_out' | 'waiting'
   revenue: number
 }
 
-export const columns: ColumnDef<ProductTable>[] = [
+export const productColumns: ColumnDef<ProductTable>[] = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -88,7 +89,7 @@ export const columns: ColumnDef<ProductTable>[] = [
   {
     id: 'actions',
     cell: ({ row }) => {
-      const payment = row.original
+      const product = row.original
 
       return (
         <DropdownMenu>
@@ -101,13 +102,14 @@ export const columns: ColumnDef<ProductTable>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
+              onClick={() => navigator.clipboard.writeText(product.id)}
             >
               Copy payment ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
+            <Link href={`/admin/product/${product.id}`}>
+              <DropdownMenuItem>View product detail</DropdownMenuItem>
+            </Link>
           </DropdownMenuContent>
         </DropdownMenu>
       )
