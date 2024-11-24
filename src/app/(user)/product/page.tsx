@@ -26,7 +26,7 @@ async function getInitialProducts() {
   return products
 }
 
-async function getUser() {
+export async function getUser() {
   const session = await getSession()
   if (session.user?.id) {
     const user = await db.user.findUnique({

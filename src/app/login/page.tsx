@@ -71,7 +71,7 @@ const LoginPage = () => {
 
       // 애니메이션 후 리다이렉트
       setTimeout(() => {
-        router.push('/product')
+        router.push('/admin/home')
       }, 4500)
     }
   }
