@@ -45,7 +45,10 @@ const UserStatisticsPage = async () => {
     <section className="flex flex-col">
       <hr />
       <UserDepositCard user={user} />
-      <TeamChart salesData={team} user={user} />
+      <main className="flex h-full flex-col">
+        <h1 className="p-6 font-[600]">Overview</h1>
+        <TeamChart salesData={team} user={user} />
+      </main>
     </section>
   )
 }
