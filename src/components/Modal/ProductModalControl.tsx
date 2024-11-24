@@ -1,4 +1,3 @@
-// components/ProductModal.tsx
 'use client'
 
 import { useState } from 'react'
@@ -6,7 +5,7 @@ import { Button } from '../ui/button'
 import { BuyModal } from './BuyModal'
 import { PostProductModal } from './PostProductModal'
 
-const ProductModal = () => {
+const ProductModal = ({ id }: { id: string }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   const openModal = () => {
@@ -19,14 +18,16 @@ const ProductModal = () => {
 
   return (
     <>
-      <Button
-        type="button"
-        onClick={openModal}
-        className="w-full bg-blue-500 hover:bg-blue-400"
-      >
-        제품 구매하기
-      </Button>
-      {isModalOpen && <PostProductModal closeModal={closeModal} />}
+      <div className="fixed bottom-0 w-[600px] bg-white px-6 py-3">
+        <Button
+          type="button"
+          onClick={openModal}
+          className="w-full bg-blue-500 hover:bg-blue-400"
+        >
+          제품 구매하기
+        </Button>
+      </div>
+      {isModalOpen && <BuyModal productId={id} closeModal={closeModal} />}
     </>
   )
 }

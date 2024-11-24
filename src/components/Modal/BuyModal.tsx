@@ -1,12 +1,43 @@
-import { useState } from 'react'
+'use client'
+
+import { useEffect, useState } from 'react'
 import { Button } from '../ui/button'
 import { Input } from '../ui/input'
+import { getModelById } from './actions'
 
-export const BuyModal = ({ closeModal }: { closeModal: () => void }) => {
+interface Model {
+  model_id: string
+  name: string
+  price: number
+  total_count: number
+  description: string
+}
+
+export const BuyModal = ({
+  productId,
+  closeModal,
+}: {
+  productId: string
+  closeModal: () => void
+}) => {
+  const [models, setModels] = useState<Model[]>([]) // 모델 데이터 상태
   const [isClosing, setIsClosing] = useState(false)
   const [quantity, setQuantity] = useState(0) // 구매 수량 상태 추가
-  const productPrice = 10000 // 상품 가격
   const maxQuantity = 3 // 최대 구매 수량
+
+  // 모델 데이터를 가져오는 useEffect
+  useEffect(() => {
+    const fetchModels = async () => {
+      try {
+        const modelsData = await getModelById(productId) // API로 모델 데이터 가져오기
+        setModels([modelsData]) // 모델 데이터를 상태에 설정
+      } catch (error) {
+        console.error('모델 데이터를 가져오는 데 실패했습니다:', error)
+      }
+    }
+
+    fetchModels() // 컴포넌트가 마운트될 때 실행
+  }, [productId]) // productId가 변경될 때마다 데이터 새로 가져오기
 
   const handleIncrease = () => {
     setQuantity((prev) => prev + 1) // 수량 증가
@@ -24,7 +55,7 @@ export const BuyModal = ({ closeModal }: { closeModal: () => void }) => {
   }
 
   // 총 결제 금액 계산
-  const totalPrice = quantity * productPrice
+  const totalPrice = quantity * models[0]?.price || 0 // models 배열에서 첫 번째 모델의 price 사용
 
   return (
     <>
@@ -43,17 +74,21 @@ export const BuyModal = ({ closeModal }: { closeModal: () => void }) => {
       >
         <form className="flex flex-col gap-6 bg-white">
           <div className="flex flex-col gap-2 p-2">
-            <p className="text-[20px] font-bold">비즈니스 모델 이름입니다.</p>
-            <p className="text-[16px]">
-              상품설명입니다.상품설명입니다.상품설명입니다.상품설명입니다.상품설명입니다.상품설명입니다.상품설명입니다.상품설명입니다.상품설명입니다.
-            </p>
+            {models.map((model) => (
+              <div key={model.model_id}>
+                <p className="text-[20px] font-bold">{model.name}</p>
+                <p className="text-[16px]">{model.description}</p>
+              </div>
+            ))}
           </div>
           <div className="flex flex-col gap-4">
             <div className="flex items-center justify-between">
               <p className="text-sm font-medium leading-5">
-                구매 수량(최대 n개)
+                구매 수량(최대 {maxQuantity}개)
               </p>
-              <p className="text-[18px]">{productPrice.toLocaleString()}원</p>
+              <p className="text-[18px]">
+                {models[0]?.price.toLocaleString()}원
+              </p>
             </div>
             <div className="flex w-full gap-3">
               <Input
