@@ -1,33 +1,35 @@
 import { BreadcrumbDemo } from '@/components/Breadcrumb/Breadcrumb'
-import { DataTable } from '@/components/Table/DataTable'
-import { productColumns, ProductTable } from '@/components/Table/ProductColumn'
+import MarkdownRenderer from '@/components/Markdown/MarkdownRender'
 import { Button } from '@/components/ui/button'
 import db from '@/lib/db'
+import Image from 'next/image'
 
-async function getData(): Promise<ProductTable[]> {
-  const products = await db.product.findMany({
+async function getProduct(id: string) {
+  const products = await db.product.findFirst({
+    where: {
+      product_id: id,
+    },
     select: {
       product_id: true,
       name: true,
-      team_id: true,
+      picture: true,
       status: true,
+      description: true,
       team: {
-        select: { revenue: true },
+        select: {
+          team_id: true,
+          name: true,
+        },
       },
     },
   })
-
-  return products.map((product) => ({
-    id: product.product_id,
-    name: product.name,
-    team_id: product.team_id,
-    status: product.status as 'selling' | 'sold_out' | 'waiting',
-    revenue: product.team ? product.team.revenue : 0,
-  }))
+  return products
 }
 
-const page = async () => {
-  const data = await getData()
+const page = async ({ params }: { params: Promise<{ id: string }> }) => {
+  const { id } = await params
+
+  const product = await getProduct(id)
 
   return (
     <div className="flex w-full flex-col gap-7 px-6 py-3">
@@ -38,7 +40,21 @@ const page = async () => {
           <p className="text-sm">추가하기</p>
         </Button>
       </div>
-      <DataTable columns={productColumns} data={data} />
+      <Image
+        src={product?.picture ?? ''}
+        alt="empty"
+        width={228}
+        height={633}
+      />
+      <div className="flex border-b border-b-slate-100">
+        <p className="px-4 py-2 text-[24px]">{product?.team?.name}</p>
+      </div>
+
+      <div className="flex flex-col gap-4 p-4">
+        <p className="text-[36px] font-bold">{product?.name}</p>
+        <MarkdownRenderer markdownContent={product?.description ?? ''} />
+      </div>
+      {/* <DataTable columns={productColumns} data={data} /> */}
     </div>
   )
 }
