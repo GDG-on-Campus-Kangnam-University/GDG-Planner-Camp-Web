@@ -55,8 +55,14 @@ const markdownContent = `
     - **2.2.4 수익 상품 설명**
 `
 
-const ProductDetailPage = async ({ params }: { params: { id: string } }) => {
-  const product = await getProduct(params.id)
+const ProductDetailPage = async ({
+  params,
+}: {
+  params: Promise<{ id: string }>
+}) => {
+  const { id } = await params
+
+  const product = await getProduct(id)
 
   return (
     <div className="flex flex-col justify-center gap-2 bg-white pb-16">
