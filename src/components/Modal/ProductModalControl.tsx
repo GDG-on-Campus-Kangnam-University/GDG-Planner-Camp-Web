@@ -1,11 +1,10 @@
-// components/ProductModal.tsx
 'use client'
 
 import { useState } from 'react'
 import { Button } from '../ui/button'
 import { BuyModal } from './BuyModal'
 
-const ProductModal = () => {
+const ProductModal = ({ id }: { id: string }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   const openModal = () => {
@@ -27,7 +26,7 @@ const ProductModal = () => {
           제품 구매하기
         </Button>
       </div>
-      {isModalOpen && <BuyModal closeModal={closeModal} />}
+      {isModalOpen && <BuyModal productId={id} closeModal={closeModal} />}
     </>
   )
 }

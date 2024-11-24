@@ -81,7 +81,7 @@ const ProductDetailPage = async ({
         <p className="text-[36px] font-bold">{product?.name}</p>
         <MarkdownRenderer markdownContent={markdownContent} />
       </div>
-      <ProductModal />
+      <ProductModal id={product?.product_id || ''} />
     </div>
   )
 }
