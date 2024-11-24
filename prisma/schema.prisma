@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
 model User {
@@ -13,7 +14,7 @@ model User {
   name     String
   balance  Int     @default(100000)
   role     String
-  team_id  String? 
+  team_id  String?
   team     Team?   @relation(fields: [team_id], references: [team_id])
 
   purchases Purchase[]
