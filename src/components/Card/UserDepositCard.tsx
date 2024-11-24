@@ -21,6 +21,7 @@ const UserDepositCard = ({ user }: { user: User }) => {
     if (user) {
       setBalance({ prev: balance.cur, cur: user.balance })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]) // data가 바뀔 때마다 실행
 
   const props = useSpring({
