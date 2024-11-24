@@ -1,45 +1,11 @@
 import UserDepositCard from '@/components/Card/UserDepositCard'
 import { ProductList } from '@/components/Product/ProductList'
-import db from '@/lib/db'
-import getSession from '@/lib/sessions'
 import { Prisma } from '@prisma/client'
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
+import { getUser } from '../actions'
+import { getInitialProducts } from './actions'
 
 // const getCachedProducts = nextCache(getInitialProducts, ['home-products'])
-
-async function getInitialProducts() {
-  const products = await db.product.findMany({
-    select: {
-      product_id: true,
-      name: true,
-      picture: true,
-      status: true,
-      team: {
-        select: {
-          team_id: true,
-          name: true,
-        },
-      },
-    },
-  })
-  return products
-}
-
-export async function getUser() {
-  const session = await getSession()
-  if (session.user?.id) {
-    const user = await db.user.findUnique({
-      where: {
-        user_id: session.user?.id,
-      },
-    })
-    if (user) {
-      return user
-    }
-  }
-  notFound()
-}
 
 export type InitialProducts = Prisma.PromiseReturnType<
   typeof getInitialProducts
