@@ -1,14 +1,9 @@
 import {
   Building2,
-  Calendar,
   ChartColumnBig,
   ChevronRight,
   ChevronsUpDown,
-  Home,
-  Inbox,
   Lightbulb,
-  Search,
-  Settings,
   User,
 } from 'lucide-react'
 
@@ -23,27 +18,28 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar'
+import Link from 'next/link'
 
 // Menu items.
 const items = [
   {
     title: '프로덕트',
-    url: '#',
+    url: '/admin/product',
     icon: Lightbulb,
   },
   {
     title: '사용자',
-    url: '#',
+    url: '/admin/user',
     icon: User,
   },
   {
     title: '팀',
-    url: '#',
+    url: '/admin/team',
     icon: Building2,
   },
   {
     title: '통계',
-    url: '#',
+    url: '/admin/statistics',
     icon: ChartColumnBig,
   },
 ]
@@ -55,7 +51,7 @@ const user = [
   },
 ]
 
-export function AppSidebar({ onSelect }: { onSelect: (item: string) => void }) {
+export const AppSidebar = () => {
   return (
     <Sidebar>
       <SidebarContent>
@@ -66,11 +62,11 @@ export function AppSidebar({ onSelect }: { onSelect: (item: string) => void }) {
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url} onClick={() => onSelect(item.title)}>
+                    <Link href={item.url}>
                       <item.icon />
                       <span className="flex-1">{item.title}</span>
                       <ChevronRight />
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}

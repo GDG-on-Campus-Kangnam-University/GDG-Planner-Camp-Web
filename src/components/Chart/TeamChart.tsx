@@ -3,12 +3,12 @@
 import { User } from '@prisma/client'
 import React from 'react'
 import {
-  BarChart,
   Bar,
+  BarChart,
+  Cell,
+  ResponsiveContainer,
   XAxis,
   YAxis,
-  ResponsiveContainer,
-  Cell,
 } from 'recharts'
 
 export const TeamChart: React.FC<{ salesData: SalesData; user: User }> = ({

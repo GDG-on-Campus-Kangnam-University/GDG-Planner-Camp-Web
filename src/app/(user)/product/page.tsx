@@ -1,5 +1,5 @@
 import UserDepositCard from '@/components/Card/UserDepositCard'
-import ProductList from '@/components/Product/ProductList'
+import { ProductList } from '@/components/Product/ProductList'
 import db from '@/lib/db'
 import getSession from '@/lib/sessions'
 import { Prisma } from '@prisma/client'

@@ -1,9 +1,8 @@
-import { TeamChart } from '@/components/Chart/TeamChart'
-import { use, useEffect, useState } from 'react'
-import { getUser } from '../product/page'
 import UserDepositCard from '@/components/Card/UserDepositCard'
+import { TeamChart } from '@/components/Chart/TeamChart'
 import db from '@/lib/db'
 import { User } from '@prisma/client'
+import { getUser } from '../product/page'
 
 export async function getTeamList(user: User) {
   const Team = await db.team.findMany({
