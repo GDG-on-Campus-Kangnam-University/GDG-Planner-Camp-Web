@@ -85,7 +85,7 @@ const HomePage = () => {
 
   // 카운트다운 타이머 설정
   useEffect(() => {
-    const targetDate = new Date('2024-11-30T10:00:00')
+    const targetDate = new Date('2024-11-29T00:00:00')
 
     const updateCountdown = () => {
       const now = new Date()
@@ -164,10 +164,6 @@ const HomePage = () => {
       const { scrollTop, scrollHeight, clientHeight } = containerRef.current
       const scrollFraction = scrollTop / (scrollHeight - clientHeight)
 
-      console.log(
-        `scrollTop: ${scrollTop}, scrollHeight: ${scrollHeight}, clientHeight: ${clientHeight}, scrollFraction: ${scrollFraction}`,
-      )
-      console.log(scrollFraction)
       if (scrollFraction > 0.1) {
         setShowTimetable(true)
       } else {
@@ -188,9 +184,7 @@ const HomePage = () => {
   }, [])
 
   const handleArrowClick = () => {
-    console.log('Arrow clicked, scrolling to timetable')
     timetableRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    // setShowTimetable(true)
   }
 
   return (
@@ -208,30 +202,34 @@ const HomePage = () => {
               width={208}
               height={104}
             />
-            <div className="flex flex-col items-center gap-2 bg-white p-4">
+            <div className="bg-white p-4 text-center">
               <h1 className="text-2xl font-bold">
                 제목은 IT 기획캠프로 하겠습니다.
               </h1>
               <p className="pb-8 text-xl">그런데, 이제 PM을 곁들인</p>
-
-              <h1 className="text-2xl font-bold">GDG X IT 기획캠프</h1>
-              <p className="mt-2 text-xl font-bold">선착순 모집중!</p>
-              <p className="mt-2 text-xl">{timeLeft}후 시작</p>
             </div>
-            <div
-              className={`relative z-20 mt-10 w-[280px] flex-col gap-3 ${timeLeft == '00:00:00' ? 'flex' : 'hidden'}`}
-            >
-              <Link href="/admin/product">
-                <Button className="w-full bg-blue-500 py-2 text-white hover:bg-blue-400">
-                  관리자 로그인
-                </Button>
-              </Link>
-              <Link href="/product">
-                <Button className="w-full bg-blue-500 py-2 text-white hover:bg-blue-400">
-                  사용자 로그인
-                </Button>
-              </Link>
-            </div>
+            {timeLeft != '00시 00분 00초' ? (
+              <div className="flex flex-col items-center gap-2 bg-white p-4">
+                <h1 className="text-2xl font-bold">GDG X IT 기획캠프</h1>
+                <p className="mt-2 text-xl font-bold">선착순 모집중!</p>
+                <p className="mt-2 text-xl">{timeLeft}후 마감</p>
+              </div>
+            ) : (
+              <div
+                className={`relative z-20 mt-10 flex w-[280px] flex-col gap-4`}
+              >
+                <Link href="/admin/product">
+                  <Button className="w-full bg-blue-500 py-2 text-white hover:bg-blue-400">
+                    관리자 로그인
+                  </Button>
+                </Link>
+                <Link href="/product">
+                  <Button className="w-full bg-blue-500 py-2 text-white hover:bg-blue-400">
+                    사용자 로그인
+                  </Button>
+                </Link>
+              </div>
+            )}
           </div>
           <div
             onClick={handleArrowClick}

@@ -3,6 +3,7 @@
 import db from '@/lib/db'
 import getSession, { UserRole } from '@/lib/sessions'
 import bcrypt from 'bcrypt'
+import { notFound } from 'next/navigation'
 import { z } from 'zod'
 
 const formSchema = z.object({
@@ -81,4 +82,21 @@ export async function logIn(formData: FormData) {
       }
     }
   }
+}
+
+export async function getUser() {
+  const session = await getSession()
+
+  if (session.user?.id) {
+    const user = await db.user.findUnique({
+      where: {
+        user_id: session.user.id,
+      },
+    })
+    if (user) {
+      return user
+    }
+  }
+
+  notFound()
 }

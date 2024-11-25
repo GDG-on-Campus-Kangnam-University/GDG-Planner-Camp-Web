@@ -2,7 +2,8 @@ import UserDepositCard from '@/components/Card/UserDepositCard'
 import { ProductList } from '@/components/Product/ProductList'
 import { Prisma } from '@prisma/client'
 import Link from 'next/link'
-import { getUser } from '../actions'
+
+import { getUser } from '@/app/login/actions'
 import { getInitialProducts } from './actions'
 
 // const getCachedProducts = nextCache(getInitialProducts, ['home-products'])
