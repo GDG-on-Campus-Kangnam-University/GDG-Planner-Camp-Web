@@ -27,7 +27,7 @@ const ProductDetailPage = async ({
       />
 
       <div className="flex border-b border-b-slate-100">
-        <p className="px-4 py-2 text-[24px]">{product?.team?.name}</p>
+        <p className="px-4 py-2 text-[16px]">{product?.team?.name}</p>
       </div>
 
       <div className="flex flex-col gap-4 p-4">

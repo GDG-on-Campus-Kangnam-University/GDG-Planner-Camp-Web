@@ -194,7 +194,7 @@ const HomePage = () => {
         className="no-scrollbar g-12 relative z-10 flex h-full w-full max-w-[600px] flex-col items-center justify-start gap-8 overflow-y-scroll rounded bg-white p-8 shadow-lg"
       >
         <SnowfallCanvas containerRef={containerRef} />
-        <div className="flex min-h-screen flex-col justify-between py-32">
+        <div className="flex min-h-screen flex-col justify-between pb-4">
           <div className="relative z-20 mt-20 flex flex-col items-center gap-14">
             <Image
               src="/image/gdg_icon.svg"
@@ -203,16 +203,24 @@ const HomePage = () => {
               height={104}
             />
             <div className="bg-white p-4 text-center">
-              <h1 className="text-2xl font-bold">
+              <h1 className="text-xl font-bold sm:text-2xl lg:text-3xl">
                 제목은 IT 기획캠프로 하겠습니다.
               </h1>
-              <p className="pb-8 text-xl">그런데, 이제 PM을 곁들인</p>
+              <p className="pb-8 text-lg sm:text-xl lg:text-2xl">
+                그런데, 이제 PM을 곁들인
+              </p>
             </div>
             {timeLeft != '00시 00분 00초' ? (
               <div className="flex flex-col items-center gap-2 bg-white p-4">
-                <h1 className="text-2xl font-bold">GDG X IT 기획캠프</h1>
-                <p className="mt-2 text-xl font-bold">선착순 모집중!</p>
-                <p className="mt-2 text-xl">{timeLeft}후 마감</p>
+                <h1 className="text-xl font-bold sm:text-2xl lg:text-3xl">
+                  GDG X IT 기획캠프
+                </h1>
+                <p className="mt-2 text-lg font-bold sm:text-xl lg:text-2xl">
+                  선착순 모집중!
+                </p>
+                <p className="mt-2 text-lg sm:text-xl lg:text-2xl">
+                  {timeLeft}후 마감
+                </p>
               </div>
             ) : (
               <div
@@ -241,7 +249,7 @@ const HomePage = () => {
               alt="화살표 이미지"
               width={150}
               height={150}
-              className="h-auto w-full"
+              className="h-auto w-full p-8"
             />
           </div>
         </div>
@@ -286,10 +294,15 @@ const HomePage = () => {
             </div>
           </div>
         </div>
-        <div>
+        <div className="flex w-full flex-col gap-4">
           <Link target="_blank" href="https://forms.gle/D8VQnaCvFCgcb6Tj7">
             <Button className="w-full bg-blue-500 py-2 text-white hover:bg-blue-400">
               지금 바로 신청하기
+            </Button>
+          </Link>
+          <Link href="/product">
+            <Button className="w-full bg-gray-300 py-2 text-white hover:bg-gray-200">
+              사용자 로그인
             </Button>
           </Link>
         </div>

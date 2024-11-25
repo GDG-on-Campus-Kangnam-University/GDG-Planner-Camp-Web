@@ -28,8 +28,8 @@ const ProductPage = async () => {
       <ProductList initialProducts={initialProducts} />
 
       <Link href="/statistics">
-        <div className="fixed bottom-4 right-4 rounded-full bg-blue-600 p-4 text-white shadow-lg transition-colors hover:bg-blue-700">
-          통계 페이지
+        <div className="fixed bottom-4 right-4 rounded-full bg-blue-600 p-4 text-sm text-white shadow-lg transition-colors hover:bg-blue-700 sm:text-lg">
+          통계 화면
         </div>
       </Link>
     </section>

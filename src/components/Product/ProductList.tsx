@@ -49,7 +49,7 @@ export const ProductList = ({
   }, [page])
 
   return (
-    <div className="grid grid-cols-3 gap-x-1.5 gap-y-6">
+    <div className="grid grid-cols-3 gap-x-1.5 gap-y-6 pb-8">
       {products.map((product) => (
         <ProductCard key={product.product_id} {...product} />
       ))}
