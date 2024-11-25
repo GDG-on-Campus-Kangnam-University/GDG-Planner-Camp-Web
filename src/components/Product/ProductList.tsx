@@ -2,7 +2,6 @@
 'use client'
 
 import { InitialProducts } from '@/app/(user)/product/page'
-import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 import { ProductCard } from '../Card/ProductCard'
 
@@ -48,12 +47,11 @@ export const ProductList = ({
       observer.disconnect()
     }
   }, [page])
+
   return (
     <div className="grid grid-cols-3 gap-x-1.5 gap-y-6">
-      {products.map((product, idx) => (
-        <Link key={idx} href={`/product/${product.product_id}`}>
-          <ProductCard key={product.product_id} {...product} />
-        </Link>
+      {products.map((product) => (
+        <ProductCard key={product.product_id} {...product} />
       ))}
       {/* {!isLastPage ? (
         <span

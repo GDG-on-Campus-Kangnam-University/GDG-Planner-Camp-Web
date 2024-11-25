@@ -17,6 +17,7 @@ enum ProductStatus {
   WAITING
   SOLDOUT
   ONSALE
+  NEW
 }
 
 model User {
