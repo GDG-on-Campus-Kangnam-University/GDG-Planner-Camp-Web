@@ -6,7 +6,7 @@ export async function middleware(request: NextRequest) {
   const session = await getSession()
   const { pathname } = request.nextUrl
 
-  const publicPaths = ['/', '/login']
+  const publicPaths = ['/', '/login', /^\/image\//, /^\/_next\/image\//]
 
   const adminPaths = /^\/admin(\/|$)/
 
@@ -38,5 +38,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|image/).*)'],
 }
