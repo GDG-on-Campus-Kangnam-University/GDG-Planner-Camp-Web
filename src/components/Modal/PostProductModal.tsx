@@ -1,10 +1,11 @@
 'use client'
 
+import { getUploadUrl, PostProduct } from '@/app/admin/product/action'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Button } from '../ui/button'
 import { Input } from '../ui/input'
-import { PostProduct } from '@/app/admin/product/action'
+import { Textarea } from '../ui/textarea'
 
 export enum ProductStatus {
   AVAILABLE = 'available',
@@ -22,7 +23,17 @@ interface ModelData {
 export interface ProductFormData {
   productName: string
   description: string
+  team_id: string
+  photo: string
   productImage: FileList
+  model: ModelData
+}
+
+export interface ProductData {
+  productName: string
+  description: string
+  team_id: string
+  photo: string
   model: ModelData
 }
 
@@ -51,10 +62,13 @@ export const PostProductModalControl = () => {
 
 const PostProductModal = ({ closeModal }: { closeModal: () => void }) => {
   const [isClosing, setIsClosing] = useState(false)
+  const [uploadUrl, setUploadUrl] = useState('')
+  const [file, setFile] = useState<File | null>(null)
 
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { isValid },
   } = useForm<ProductFormData>({
     defaultValues: {
@@ -75,12 +89,58 @@ const PostProductModal = ({ closeModal }: { closeModal: () => void }) => {
     }, 300)
   }
 
+  const onImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const {
+      target: { files },
+    } = event
+    if (!files) {
+      return
+    }
+    const file = files[0]
+
+    setFile(file)
+    const { success, result } = await getUploadUrl()
+    if (success) {
+      const { id, uploadURL } = result
+      setUploadUrl(uploadURL)
+      setValue(
+        'photo',
+        `https://imagedelivery.net/ysR4eOJgia8sQeiFnFYhhA/${id}/public`,
+      )
+    }
+  }
+
   const onSubmit = async (data: ProductFormData) => {
     console.log('폼 데이터:', data)
+    if (!file) {
+      return
+    }
+
+    const cloudflareForm = new FormData()
+    cloudflareForm.append('file', file)
+    const response = await fetch(uploadUrl, {
+      method: 'post',
+      body: cloudflareForm,
+    })
+    if (response.status !== 200) {
+      return
+    }
+    // await PostProduct(formData)
 
     try {
-      const res = await PostProduct(data)
-      console.log('Product created:', res.json())
+      await PostProduct({
+        productName: data.productName,
+        description: data.description,
+        photo: data.photo,
+        team_id: data.team_id,
+        model: {
+          modelName: data.model.modelName,
+          modelDescription: data.model.modelDescription,
+          modelPrice: data.model.modelPrice,
+          modelQuantity: data.model.modelQuantity,
+        },
+      })
+      console.log('Product created:')
       closeModal()
     } catch (error) {
       console.error('Error creating product:', error)
@@ -109,7 +169,7 @@ const PostProductModal = ({ closeModal }: { closeModal: () => void }) => {
               {...register('productName', { required: true })}
               placeholder="제품 이름"
             />
-            <Input
+            <Textarea
               {...register('description', { required: true })}
               placeholder="제품 설명"
               className="resize-none"
@@ -118,6 +178,11 @@ const PostProductModal = ({ closeModal }: { closeModal: () => void }) => {
               type="file"
               {...register('productImage', { required: true })}
               accept="image/*"
+              onChange={onImageChange}
+            />
+            <Input
+              {...register('team_id', { required: true })}
+              placeholder="팀 아이디"
             />
 
             {/* 단일 모델 입력 */}
@@ -137,7 +202,6 @@ const PostProductModal = ({ closeModal }: { closeModal: () => void }) => {
                 type="number"
                 {...register('model.modelPrice', {
                   required: true,
-                  min: 0,
                 })}
                 placeholder="가격"
               />
