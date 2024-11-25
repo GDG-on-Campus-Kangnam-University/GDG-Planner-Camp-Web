@@ -191,11 +191,11 @@ const HomePage = () => {
     <div className="relative flex h-screen w-full items-center justify-center bg-slate-100">
       <div
         ref={containerRef}
-        className="no-scrollbar g-12 relative z-10 flex h-full w-full max-w-[600px] flex-col items-center justify-start gap-8 overflow-y-scroll rounded bg-white p-8 shadow-lg"
+        className="no-scrollbar g-12 relative z-10 flex h-full w-full max-w-[600px] flex-col gap-8 overflow-y-scroll rounded bg-white p-8 pb-12 shadow-lg"
       >
         <SnowfallCanvas containerRef={containerRef} />
-        <div className="flex min-h-screen flex-col justify-between pb-4">
-          <div className="relative z-20 mt-20 flex flex-col items-center gap-14">
+        <div className="flex min-h-screen flex-col pb-4">
+          <div className="relative z-20 mt-2 flex flex-grow flex-col items-center justify-center gap-8 py-3">
             <Image
               src="/image/gdg_icon.svg"
               alt="gdg_icon"
@@ -211,14 +211,11 @@ const HomePage = () => {
               </p>
             </div>
             {timeLeft != '00시 00분 00초' ? (
-              <div className="flex flex-col items-center gap-2 bg-white p-4">
-                <h1 className="text-xl font-bold sm:text-2xl lg:text-3xl">
-                  GDG X IT 기획캠프
+              <div className="flex flex-col items-center gap-1 bg-white p-4">
+                <h1 className="text-l font-bold sm:text-2xl lg:text-3xl">
+                  GDG X IT 기획캠프 선착순 모집중!
                 </h1>
-                <p className="mt-2 text-lg font-bold sm:text-xl lg:text-2xl">
-                  선착순 모집중!
-                </p>
-                <p className="mt-2 text-lg sm:text-xl lg:text-2xl">
+                <p className="text-l mt-2 sm:text-xl lg:text-2xl">
                   {timeLeft}후 마감
                 </p>
               </div>

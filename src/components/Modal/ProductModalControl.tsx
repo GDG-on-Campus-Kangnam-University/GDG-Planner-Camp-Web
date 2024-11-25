@@ -26,7 +26,7 @@ const ProductModal = ({ model, user }: { model: Model[]; user: User }) => {
 
   return (
     <>
-      <div className="fixed bottom-0 w-[600px] bg-white px-6 py-3">
+      <div className="fixed bottom-0 w-full max-w-[600px] bg-white px-6 py-3">
         <Button
           type="button"
           onClick={openModal}
