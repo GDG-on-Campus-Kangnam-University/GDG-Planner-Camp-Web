@@ -23,7 +23,6 @@ const UserHomePage = async () => {
 
   return (
     <section className="flex flex-col gap-6">
-      <hr />
       <UserDepositCard user={user} />
       <hr />
       <ProductList initialProducts={initialProducts} />

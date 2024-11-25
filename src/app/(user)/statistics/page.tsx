@@ -1,6 +1,6 @@
+import { getUser } from '@/app/login/actions'
 import UserDepositCard from '@/components/Card/UserDepositCard'
 import { TeamChart } from '@/components/Chart/TeamChart'
-import { getUser } from '../actions'
 import { getTeamList } from './actions'
 
 const UserStatisticsPage = async () => {
@@ -11,7 +11,6 @@ const UserStatisticsPage = async () => {
 
   return (
     <section className="flex flex-col">
-      <hr />
       <UserDepositCard user={user} />
       <main className="flex h-full flex-col">
         <h1 className="p-6 font-[600]">Overview</h1>
