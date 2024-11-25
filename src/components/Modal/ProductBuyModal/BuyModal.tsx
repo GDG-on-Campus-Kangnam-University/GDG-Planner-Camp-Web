@@ -1,9 +1,11 @@
 'use client'
 
+import { useRouter } from 'next/navigation' // 라우터 사용
 import { useState } from 'react'
-import { Button } from '../ui/button'
-import { Input } from '../ui/input'
 import { useForm } from 'react-hook-form'
+import { Button } from '../../ui/button'
+import { Input } from '../../ui/input'
+import { purchaseProduct } from './actions'
 
 interface Model {
   model_id: string
@@ -21,11 +23,13 @@ export const BuyModal = ({
   closeModal: () => void
 }) => {
   const [isClosing, setIsClosing] = useState(false)
-  const maxQuantity = 3 // 최대 구매 수량
+  const [loading, setLoading] = useState(false)
+  const [formError, setFormError] = useState<string | null>(null)
+  const router = useRouter()
 
   const { handleSubmit, watch, setValue } = useForm<{ quantity: number }>({
     defaultValues: {
-      quantity: 0,
+      quantity: 1, // 초기 수량을 1로 설정
     },
   })
 
@@ -39,7 +43,9 @@ export const BuyModal = ({
   }
 
   const handleDecrease = () => {
-    setValue('quantity', quantity - 1) // 수량 감소
+    if (quantity > 1) {
+      setValue('quantity', quantity - 1) // 수량 감소 (0 이하로 내려가지 않도록)
+    }
   }
 
   const handleCloseModal = () => {
@@ -49,28 +55,53 @@ export const BuyModal = ({
     }, 300)
   }
 
-  const onSubmit = async () => {
-    console.log('click')
-  }
+  const onSubmit = handleSubmit(async () => {
+    setLoading(true)
+    setFormError(null)
+
+    try {
+      const formData = new FormData()
+      formData.append('model_id', model[0].model_id)
+      formData.append('quantity', quantity.toString())
+
+      const result = await purchaseProduct(formData)
+
+      if (result && result.formErrors && result.formErrors.purchase) {
+        setFormError(result.formErrors.purchase)
+      } else {
+        // 구매 성공 시 모달 닫기 및 페이지 리프레시 또는 리디렉션
+        handleCloseModal()
+        router.push('/product') // 예시: 구매 내역 페이지로 이동
+        router.refresh() // 또는 현재 페이지 새로고침
+      }
+    } catch (error: unknown) {
+      let errorMessage = '구매 중 오류가 발생했습니다. 다시 시도해주세요.'
+      if (error instanceof Error) {
+        errorMessage = error.message
+      }
+      setFormError(errorMessage)
+      console.error('구매 오류:', error)
+    } finally {
+      setLoading(false)
+    }
+  })
+
   return (
     <>
       {/* 배경 요소 */}
       <div
-        className={`fixed inset-0 bg-black transition-opacity ${
+        className={`fixed inset-0 m-auto w-[600px] bg-black transition-opacity ${
           isClosing ? 'opacity-0' : 'opacity-40'
         } z-40`}
-      ></div>
-
+        onClick={handleCloseModal} // 배경 클릭 시 모달 닫기
+      />
       {/* 모달 내용 */}
       <div
         className={`fixed bottom-0 w-[600px] rounded-t-[16px] bg-white p-6 shadow-lg ${
           isClosing ? 'animate-slideDown' : 'animate-slideUp'
         } z-50`}
       >
-        <form
-          className="flex flex-col gap-6 bg-white"
-          onSubmit={handleSubmit(onSubmit)}
-        >
+        <form className="flex flex-col gap-6 bg-white" onSubmit={onSubmit}>
           <div className="flex flex-col gap-2 p-2">
             {model.map((data) => (
               <div key={data.model_id}>
@@ -81,32 +112,31 @@ export const BuyModal = ({
           </div>
           <div className="flex flex-col gap-4">
             <div className="flex items-center justify-between">
-              <p className="text-sm font-medium leading-5">
-                구매 수량(최대 {maxQuantity}개)
-              </p>
+              <p className="text-sm font-medium leading-5">구매 수량</p>
               <p className="text-[18px]">
                 {model[0]?.price.toLocaleString()}원
               </p>
             </div>
-            <div className="flex w-full gap-3">
+            <div className="flex items-center gap-3">
+              <Button
+                type="button"
+                className="w-[64px] rounded-md border border-slate-100 bg-white text-black hover:bg-slate-50"
+                onClick={handleDecrease}
+                disabled={quantity <= 1 || loading} // 수량이 1 이하일 때 비활성화
+              >
+                -
+              </Button>
               <Input
                 type="number"
-                className="flex w-[400px] border-slate-100 text-center"
+                className="w-[100px] text-center"
                 value={quantity}
                 readOnly
               />
               <Button
                 type="button"
                 className="w-[64px] rounded-md border border-slate-100 bg-white text-black hover:bg-slate-50"
-                onClick={handleDecrease} // + 클릭 시 증가
-              >
-                -
-              </Button>
-              <Button
-                type="button"
-                className="w-[64px] rounded-md border border-slate-100 bg-white text-black hover:bg-slate-50"
-                onClick={handleIncrease} // - 클릭 시 감소
-                disabled={quantity >= maxQuantity}
+                onClick={handleIncrease}
+                disabled={loading}
               >
                 +
               </Button>
@@ -118,20 +148,22 @@ export const BuyModal = ({
               {totalPrice.toLocaleString()}원 {/* 총 결제 금액 */}
             </p>
           </div>
+          {formError && <div className="text-red-500">{formError}</div>}
           <div className="flex items-center gap-6">
             <Button
               type="button"
               onClick={handleCloseModal}
               className="w-full bg-gray-400 hover:bg-gray-300"
+              disabled={loading}
             >
               취소하기
             </Button>
             <Button
               type="submit"
               className="w-full bg-blue-500 hover:bg-blue-400"
-              disabled={quantity === 0} // 수량이 0일 경우 비활성화
+              disabled={quantity === 0 || loading}
             >
-              구매하기
+              {loading ? '구매 중...' : '구매하기'}
             </Button>
           </div>
         </form>

@@ -12,7 +12,7 @@ export type InitialProducts = Prisma.PromiseReturnType<
   typeof getInitialProducts
 >
 
-const UserHomePage = async () => {
+const ProductPage = async () => {
   const initialProducts = await getInitialProducts()
   const user = await getUser()
 
@@ -36,4 +36,4 @@ const UserHomePage = async () => {
   )
 }
 
-export default UserHomePage
+export default ProductPage

@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { Button } from '../ui/button'
-import { BuyModal } from './BuyModal'
+import { BuyModal } from './ProductBuyModal/BuyModal'
 
 interface Model {
   model_id: string

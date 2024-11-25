@@ -11,13 +11,11 @@ export async function PostProduct(formData: ProductData) {
         name: formData.productName,
         description: formData.description,
         picture: formData.photo,
-        status: 'waiting',
         team_id: formData.team_id,
       },
     })
-    console.log(product) // product 생성에서 payload 오류가 발생
 
-    const newModel = await db.model.create({
+    await db.model.create({
       data: {
         name: formData.model.modelName,
         description: formData.model.modelDescription,
@@ -30,8 +28,6 @@ export async function PostProduct(formData: ProductData) {
           : undefined,
       },
     })
-
-    console.log(newModel)
 
     return true
   } catch (error) {

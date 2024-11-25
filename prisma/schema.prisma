@@ -8,14 +8,25 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+enum UserRole {
+  ADMIN
+  USER
+}
+
+enum ProductStatus {
+  WAITING
+  SOLDOUT
+  ONSALE
+}
+
 model User {
-  user_id  Int     @id
+  user_id  Int      @id @unique
   password String
   name     String
-  balance  Int     @default(100000)
-  role     String
+  balance  Int      @default(100000)
+  role     UserRole @default(USER)
   team_id  String?
-  team     Team?   @relation(fields: [team_id], references: [team_id])
+  team     Team?    @relation(fields: [team_id], references: [team_id])
 
   purchases Purchase[]
 
@@ -27,19 +38,18 @@ model Team {
   name       String
   product_id String? @unique
 
-  revenue  Int            @default(0)
+  revenue  Int       @default(0)
   users    User[]
   products Product[]
-  settings GlobalSetting?
 
   @@map("team")
 }
 
 model Product {
-  product_id  String @id @default(uuid())
+  product_id  String        @id @default(uuid())
   name        String
   picture     String
-  status      String
+  status      ProductStatus @default(WAITING)
   description String
 
   team_id String?
@@ -78,11 +88,7 @@ model Purchase {
 }
 
 model GlobalSetting {
-  id      String  @id @default(uuid())
-  team_id String  @unique
-  blurred Boolean
-
-  team Team @relation(fields: [team_id], references: [team_id])
+  id String @id @default(uuid())
 
   @@map("global_setting")
 }
