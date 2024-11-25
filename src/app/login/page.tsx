@@ -64,10 +64,15 @@ const LoginPage = () => {
       setTimeout(() => {
         fireworksRef.current?.createFireworkAt(x, y, 64)
       }, 3300)
-
       setTimeout(() => {
-        fireworksRef.current?.createFireworkAt(x, y, 64)
-      }, 3500)
+        fireworksRef.current?.createFireworkAt(x, y, 34)
+      }, 3700)
+      setTimeout(() => {
+        fireworksRef.current?.createFireworkAt(x, y, 34)
+      }, 4100)
+      setTimeout(() => {
+        fireworksRef.current?.createFireworkAt(x, y, 34)
+      }, 4500)
 
       // 애니메이션 후 리다이렉트
       setTimeout(() => {

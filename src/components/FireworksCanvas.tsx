@@ -192,6 +192,10 @@ const FireworksCanvas = forwardRef<FireworksCanvasHandle, object>(
         '/image/popcorn_eye2.svg',
         '/image/popcorn_eye3.svg',
         '/image/popcorn_eye4.svg',
+        '/image/santa_popcorn1.svg',
+        '/image/santa_popcorn2.svg',
+        '/image/santa_popcorn3.svg',
+        '/image/santa_popcorn4.svg',
       ]
 
       // 이미지 로드 후 애니메이션 시작
