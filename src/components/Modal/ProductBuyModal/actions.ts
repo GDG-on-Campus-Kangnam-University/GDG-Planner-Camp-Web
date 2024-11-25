@@ -2,6 +2,7 @@
 
 import db from '@/lib/db'
 import getSession from '@/lib/sessions'
+import { ProductStatus } from '@prisma/client'
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
 
@@ -64,7 +65,7 @@ export async function purchaseProduct(
         where: { model_id: validModelId },
         include: {
           product: {
-            select: { team_id: true },
+            select: { team_id: true, status: true, product_id: true },
           },
         },
       })
@@ -117,6 +118,18 @@ export async function purchaseProduct(
         where: { user_id: userId },
         data: { balance: { decrement: totalCost } },
       })
+
+      // 남은 재고 계산
+      const remainingStock =
+        model.total_count - (currentPurchaseCount + validQuantity)
+
+      // 남은 재고가 0인 경우, 제품 상태를 SOLDOUT으로 변경
+      if (remainingStock === 0 && model.product) {
+        await tx.product.update({
+          where: { product_id: model.product.product_id }, // team_id가 product_id인지 확인 필요
+          data: { status: ProductStatus.SOLDOUT },
+        })
+      }
     })
 
     // 구매 성공

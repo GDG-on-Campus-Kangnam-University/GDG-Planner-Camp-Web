@@ -14,7 +14,9 @@ interface ProductProps {
 }
 
 export const ProductCard = (product: ProductProps) => {
-  const isAvailable = product.status === 'ONSALE' || product.status === 'NEW'
+  const isAvailable =
+    product.status === ProductStatus.ONSALE ||
+    product.status === ProductStatus.NEW
 
   const ProductContent = (
     <div className="relative flex flex-col gap-2">
@@ -31,10 +33,12 @@ export const ProductCard = (product: ProductProps) => {
           <div
             className={`absolute left-2 top-2 rounded bg-gray-400 px-2 py-1 text-xs font-bold text-white`}
           >
-            {product.status === 'WAITING' ? '판매 대기중' : '판매 종료'}
+            {product.status === ProductStatus.WAITING
+              ? '판매 대기중'
+              : '판매 종료'}
           </div>
         )}
-        {product.status === 'NEW' && (
+        {product.status === ProductStatus.NEW && (
           <div
             className={`absolute left-2 top-2 rounded bg-red-500 px-2 py-1 text-xs font-bold text-white`}
           >
