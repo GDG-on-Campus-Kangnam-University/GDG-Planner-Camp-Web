@@ -1,9 +1,9 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Button } from '../ui/button'
 import { Input } from '../ui/input'
-import { getModelById } from './actions'
+import { useForm } from 'react-hook-form'
 
 interface Model {
   model_id: string
@@ -14,37 +14,32 @@ interface Model {
 }
 
 export const BuyModal = ({
-  productId,
+  model,
   closeModal,
 }: {
-  productId: string
+  model: Model[]
   closeModal: () => void
 }) => {
-  const [models, setModels] = useState<Model[]>([]) // 모델 데이터 상태
   const [isClosing, setIsClosing] = useState(false)
-  const [quantity, setQuantity] = useState(0) // 구매 수량 상태 추가
   const maxQuantity = 3 // 최대 구매 수량
 
-  // 모델 데이터를 가져오는 useEffect
-  useEffect(() => {
-    const fetchModels = async () => {
-      try {
-        const modelsData = await getModelById(productId) // API로 모델 데이터 가져오기
-        setModels([modelsData]) // 모델 데이터를 상태에 설정
-      } catch (error) {
-        console.error('모델 데이터를 가져오는 데 실패했습니다:', error)
-      }
-    }
+  const { handleSubmit, watch, setValue } = useForm<{ quantity: number }>({
+    defaultValues: {
+      quantity: 0,
+    },
+  })
 
-    fetchModels() // 컴포넌트가 마운트될 때 실행
-  }, [productId]) // productId가 변경될 때마다 데이터 새로 가져오기
+  const quantity = watch('quantity')
+
+  // 총 결제 금액 계산
+  const totalPrice = quantity * model[0]?.price || 0
 
   const handleIncrease = () => {
-    setQuantity((prev) => prev + 1) // 수량 증가
+    setValue('quantity', quantity + 1) // 수량 증가
   }
 
   const handleDecrease = () => {
-    if (quantity > 0) setQuantity((prev) => prev - 1) // 수량 감소 (0 미만으로는 안됨)
+    setValue('quantity', quantity - 1) // 수량 감소
   }
 
   const handleCloseModal = () => {
@@ -54,9 +49,9 @@ export const BuyModal = ({
     }, 300)
   }
 
-  // 총 결제 금액 계산
-  const totalPrice = quantity * models[0]?.price || 0 // models 배열에서 첫 번째 모델의 price 사용
-
+  const onSubmit = async () => {
+    console.log('click')
+  }
   return (
     <>
       {/* 배경 요소 */}
@@ -72,12 +67,15 @@ export const BuyModal = ({
           isClosing ? 'animate-slideDown' : 'animate-slideUp'
         } z-50`}
       >
-        <form className="flex flex-col gap-6 bg-white">
+        <form
+          className="flex flex-col gap-6 bg-white"
+          onSubmit={handleSubmit(onSubmit)}
+        >
           <div className="flex flex-col gap-2 p-2">
-            {models.map((model) => (
-              <div key={model.model_id}>
-                <p className="text-[20px] font-bold">{model.name}</p>
-                <p className="text-[16px]">{model.description}</p>
+            {model.map((data) => (
+              <div key={data.model_id}>
+                <p className="text-[20px] font-bold">{data.name}</p>
+                <p className="text-[16px]">{data.description}</p>
               </div>
             ))}
           </div>
@@ -87,14 +85,14 @@ export const BuyModal = ({
                 구매 수량(최대 {maxQuantity}개)
               </p>
               <p className="text-[18px]">
-                {models[0]?.price.toLocaleString()}원
+                {model[0]?.price.toLocaleString()}원
               </p>
             </div>
             <div className="flex w-full gap-3">
               <Input
                 type="number"
                 className="flex w-[400px] border-slate-100 text-center"
-                value={quantity} // input 값은 상태로 관리
+                value={quantity}
                 readOnly
               />
               <Button
@@ -108,7 +106,7 @@ export const BuyModal = ({
                 type="button"
                 className="w-[64px] rounded-md border border-slate-100 bg-white text-black hover:bg-slate-50"
                 onClick={handleIncrease} // - 클릭 시 감소
-                disabled={quantity >= maxQuantity} // 수량이 최대일 경우 비활성화
+                disabled={quantity >= maxQuantity}
               >
                 +
               </Button>

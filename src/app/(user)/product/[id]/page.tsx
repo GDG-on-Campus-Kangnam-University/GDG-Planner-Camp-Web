@@ -26,6 +26,23 @@ async function getProduct(id: string) {
   return products
 }
 
+async function getModels(id: string) {
+  const model = await db.model.findFirst({
+    where: { product_id: id },
+    select: {
+      model_id: true,
+      name: true,
+      price: true,
+      total_count: true,
+      description: true,
+      product: true,
+      product_id: true,
+      purchases: true,
+    },
+  })
+  return model ? [model] : []
+}
+
 const markdownContent = `
 ## 사용자 화면
 
@@ -63,6 +80,7 @@ const ProductDetailPage = async ({
   const { id } = await params
 
   const product = await getProduct(id)
+  const model = await getModels(id)
 
   return (
     <div className="flex flex-col justify-center gap-2 bg-white pb-16">
@@ -81,7 +99,7 @@ const ProductDetailPage = async ({
         <p className="text-[36px] font-bold">{product?.name}</p>
         <MarkdownRenderer markdownContent={markdownContent} />
       </div>
-      <ProductModal id={product?.product_id || ''} />
+      <ProductModal model={model} />
     </div>
   )
 }

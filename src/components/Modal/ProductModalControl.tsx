@@ -3,9 +3,16 @@
 import { useState } from 'react'
 import { Button } from '../ui/button'
 import { BuyModal } from './BuyModal'
-import { PostProductModal } from './PostProductModal'
 
-const ProductModal = ({ id }: { id: string }) => {
+interface Model {
+  model_id: string
+  name: string
+  price: number
+  total_count: number
+  description: string
+}
+
+const ProductModal = ({ model }: { model: Model[] }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   const openModal = () => {
@@ -27,7 +34,7 @@ const ProductModal = ({ id }: { id: string }) => {
           제품 구매하기
         </Button>
       </div>
-      {isModalOpen && <BuyModal productId={id} closeModal={closeModal} />}
+      {isModalOpen && <BuyModal model={model} closeModal={closeModal} />}
     </>
   )
 }
