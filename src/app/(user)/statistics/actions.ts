@@ -7,18 +7,13 @@ export async function getTeamList(user: User) {
       team_id: true,
       name: true,
       revenue: true,
-      settings: {
-        select: {
-          blurred: true,
-        },
-      },
     },
   })
   const formatTeam = Team.map((team, index) => {
     return {
       ...team,
       rank: index + 1,
-      blurred: team.settings?.blurred || true,
+      // blurred: team.settings?.blurred || true,
     }
   })
 

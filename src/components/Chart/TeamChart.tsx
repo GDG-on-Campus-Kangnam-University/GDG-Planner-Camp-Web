@@ -16,7 +16,7 @@ interface Team {
   name: string
   revenue: number
   rank: number
-  blurred: boolean
+  // blurred: boolean
 }
 
 interface SalesData {

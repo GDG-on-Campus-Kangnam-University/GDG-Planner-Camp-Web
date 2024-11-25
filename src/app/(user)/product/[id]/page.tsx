@@ -1,4 +1,5 @@
 // app/product/[id]/page.tsx 또는 pages/product/[id].tsx
+import { getUser } from '@/app/login/actions'
 import MarkdownRenderer from '@/components/Markdown/MarkdownRender'
 import ProductModal from '@/components/Modal/ProductModalControl'
 import Image from 'next/image'
@@ -13,6 +14,7 @@ const ProductDetailPage = async ({
 
   const product = await getProduct(id)
   const model = await getModels(id)
+  const user = await getUser()
 
   return (
     <div className="flex flex-col justify-center gap-2 bg-white pb-16">
@@ -33,7 +35,7 @@ const ProductDetailPage = async ({
         <MarkdownRenderer markdownContent={product?.description ?? ''} />
       </div>
 
-      <ProductModal model={model} />
+      <ProductModal model={model} user={user} />
     </div>
   )
 }

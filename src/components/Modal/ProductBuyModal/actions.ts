@@ -74,17 +74,25 @@ export async function purchaseProduct(
       }
 
       // 현재 구매 수 확인
-      const currentPurchaseCount = await tx.purchase.count({
+      const aggregateResult = await tx.purchase.aggregate({
         where: { model_id: validModelId },
+        _sum: {
+          quantity: true,
+        },
       })
 
+      const currentPurchaseCount = aggregateResult._sum.quantity || 0
+      if (currentPurchaseCount == model.total_count) {
+        throw new Error('해당 제품은 품절되었습니다...')
+      }
+
       if (currentPurchaseCount + validQuantity > model.total_count) {
-        throw new Error('해당 모델의 재고가 부족합니다.')
+        throw new Error('해당 제품의 재고가 부족합니다.')
       }
 
       // 사용자의 팀과 모델의 팀 비교
       if (user.team_id && model.product?.team_id === user.team_id) {
-        throw new Error('자신이 속한 팀의 프로덕트는 구매할 수 없습니다.')
+        throw new Error('자신이 속한 팀의 제품은 구매할 수 없습니다.')
       }
 
       // 총 구매 비용 계산

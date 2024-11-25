@@ -1,5 +1,6 @@
 'use client'
 
+import { User } from '@prisma/client'
 import { useState } from 'react'
 import { Button } from '../ui/button'
 import { BuyModal } from './ProductBuyModal/BuyModal'
@@ -12,7 +13,7 @@ interface Model {
   description: string
 }
 
-const ProductModal = ({ model }: { model: Model[] }) => {
+const ProductModal = ({ model, user }: { model: Model[]; user: User }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   const openModal = () => {
@@ -34,7 +35,9 @@ const ProductModal = ({ model }: { model: Model[] }) => {
           제품 구매하기
         </Button>
       </div>
-      {isModalOpen && <BuyModal model={model} closeModal={closeModal} />}
+      {isModalOpen && (
+        <BuyModal model={model} closeModal={closeModal} user={user} />
+      )}
     </>
   )
 }

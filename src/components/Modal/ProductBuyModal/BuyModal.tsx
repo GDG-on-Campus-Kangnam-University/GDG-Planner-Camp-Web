@@ -1,7 +1,8 @@
 'use client'
 
-import { useRouter } from 'next/navigation' // 라우터 사용
-import { useState } from 'react'
+import { User } from '@prisma/client'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Button } from '../../ui/button'
 import { Input } from '../../ui/input'
@@ -18,9 +19,11 @@ interface Model {
 export const BuyModal = ({
   model,
   closeModal,
+  user,
 }: {
   model: Model[]
   closeModal: () => void
+  user: User
 }) => {
   const [isClosing, setIsClosing] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -38,8 +41,15 @@ export const BuyModal = ({
   // 총 결제 금액 계산
   const totalPrice = quantity * model[0]?.price || 0
 
+  // 구매 가능 최대 수량 계산 (잔액과 재고를 고려)
+  const maxQuantityByBalance = Math.floor(user.balance / model[0]?.price)
+  const maxQuantityByStock = model[0]?.total_count // 재고 수량
+  const maxQuantity = Math.min(maxQuantityByBalance, maxQuantityByStock)
+
   const handleIncrease = () => {
-    setValue('quantity', quantity + 1) // 수량 증가
+    if (quantity < maxQuantity) {
+      setValue('quantity', quantity + 1) // 수량 증가
+    }
   }
 
   const handleDecrease = () => {
@@ -86,6 +96,17 @@ export const BuyModal = ({
     }
   })
 
+  // 모달 열림 시 스크롤 막기
+  useEffect(() => {
+    // 모달이 열릴 때
+    document.body.style.overflow = 'hidden'
+
+    return () => {
+      // 모달이 닫힐 때
+      document.body.style.overflow = ''
+    }
+  }, [])
+
   return (
     <>
       {/* 배경 요소 */}
@@ -97,7 +118,7 @@ export const BuyModal = ({
       />
       {/* 모달 내용 */}
       <div
-        className={`fixed bottom-0 w-[600px] rounded-t-[16px] bg-white p-6 shadow-lg ${
+        className={`fixed bottom-0 mx-auto w-full max-w-[600px] rounded-t-[16px] bg-white p-6 shadow-lg ${
           isClosing ? 'animate-slideDown' : 'animate-slideUp'
         } z-50`}
       >
@@ -112,12 +133,20 @@ export const BuyModal = ({
           </div>
           <div className="flex flex-col gap-4">
             <div className="flex items-center justify-between">
-              <p className="text-sm font-medium leading-5">구매 수량</p>
+              <p className="text-sm text-gray-500">
+                최대 구매 가능 수량: {maxQuantity}개
+              </p>
               <p className="text-[18px]">
                 {model[0]?.price.toLocaleString()}원
               </p>
             </div>
             <div className="flex items-center gap-3">
+              <Input
+                type="number"
+                className="flex-grow text-center"
+                value={quantity}
+                readOnly
+              />
               <Button
                 type="button"
                 className="w-[64px] rounded-md border border-slate-100 bg-white text-black hover:bg-slate-50"
@@ -126,17 +155,11 @@ export const BuyModal = ({
               >
                 -
               </Button>
-              <Input
-                type="number"
-                className="w-[100px] text-center"
-                value={quantity}
-                readOnly
-              />
               <Button
                 type="button"
                 className="w-[64px] rounded-md border border-slate-100 bg-white text-black hover:bg-slate-50"
                 onClick={handleIncrease}
-                disabled={loading}
+                disabled={quantity >= maxQuantity || loading}
               >
                 +
               </Button>
