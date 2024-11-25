@@ -1,3 +1,4 @@
+import { SpeedInsights } from '@vercel/speed-insights/next'
 import type { Metadata } from 'next'
 import localFont from 'next/font/local'
 import './globals.css'
@@ -23,6 +24,7 @@ const RootLayout = ({
     <html lang="en">
       <body className={`${geistNotoSansKR.variable} h-screen antialiased`}>
         {children}
+        <SpeedInsights />
       </body>
     </html>
   )
