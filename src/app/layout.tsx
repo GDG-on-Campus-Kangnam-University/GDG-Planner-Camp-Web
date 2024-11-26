@@ -1,3 +1,4 @@
+import { Analytics } from '@vercel/analytics/next'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import type { Metadata } from 'next'
 import localFont from 'next/font/local'
@@ -25,6 +26,7 @@ const RootLayout = ({
       <body className={`${geistNotoSansKR.variable} h-screen antialiased`}>
         {children}
         <SpeedInsights />
+        <Analytics />
       </body>
     </html>
   )
