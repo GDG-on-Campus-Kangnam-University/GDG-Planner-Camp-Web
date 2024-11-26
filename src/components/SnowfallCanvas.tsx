@@ -9,6 +9,10 @@ const imagePaths = [
   '/image/santa_popcorn2.svg',
   '/image/santa_popcorn3.svg',
   '/image/santa_popcorn4.svg',
+  '/image/santa_popcorn5.svg',
+  '/image/santa_popcorn6.svg',
+  '/image/santa_popcorn7.svg',
+  '/image/santa_popcorn8.svg',
 ]
 
 // 타입 확장: sprite에 opacity 속성 추가

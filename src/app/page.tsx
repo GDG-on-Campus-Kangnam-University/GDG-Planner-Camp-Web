@@ -202,7 +202,7 @@ const HomePage = () => {
               width={208}
               height={104}
             />
-            <div className="bg-white p-4 text-center">
+            <div className="p-4 text-center">
               <h1 className="text-xl font-bold sm:text-2xl lg:text-3xl">
                 제목은 IT 기획캠프로 하겠습니다.
               </h1>
@@ -211,11 +211,11 @@ const HomePage = () => {
               </p>
             </div>
             {timeLeft != '00시 00분 00초' ? (
-              <div className="flex flex-col items-center gap-1 bg-white p-4">
-                <h1 className="text-l font-bold sm:text-2xl lg:text-3xl">
+              <div className="flex flex-col items-center gap-1 p-4">
+                <h1 className="text-md font-bold sm:text-xl">
                   GDG X IT 기획캠프 선착순 모집중!
                 </h1>
-                <p className="text-l mt-2 sm:text-xl lg:text-2xl">
+                <p className="text-md sm:text-l mt-2 lg:text-2xl">
                   {timeLeft}후 마감
                 </p>
               </div>
@@ -246,7 +246,7 @@ const HomePage = () => {
               alt="화살표 이미지"
               width={150}
               height={150}
-              className="h-auto w-full p-8"
+              className="h-auto w-full p-32"
             />
           </div>
         </div>
