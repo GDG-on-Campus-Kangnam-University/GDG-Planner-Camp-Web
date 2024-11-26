@@ -166,7 +166,6 @@ const FireworksCanvas = forwardRef<FireworksCanvasHandle, object>(
       resizeCanvas()
       window.addEventListener('resize', resizeCanvas)
 
-      // 이미지 로드 후 캔버스에 그리기
       const loadImagesToCanvas = (
         srcs: string[],
       ): Promise<HTMLCanvasElement[]> => {
@@ -210,7 +209,6 @@ const FireworksCanvas = forwardRef<FireworksCanvasHandle, object>(
         '/image/santa_popcorn4.svg',
       ]
 
-      // 이미지 로드 후 애니메이션 시작
       loadImagesToCanvas(imagePaths)
         .then((loadedCanvases) => {
           imagesRef.current = loadedCanvases
