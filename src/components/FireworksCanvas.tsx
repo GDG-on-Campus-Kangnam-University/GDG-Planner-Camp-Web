@@ -13,7 +13,7 @@ import {
 
 interface Particle {
   body: Matter.Body
-  image: HTMLImageElement
+  imageCanvas: HTMLCanvasElement
 }
 
 export interface FireworksCanvasHandle {
@@ -25,7 +25,7 @@ const FireworksCanvas = forwardRef<FireworksCanvasHandle, object>(
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const particlesRef = useRef<Particle[]>([])
     const animationFrameId = useRef<number>()
-    const imagesRef = useRef<HTMLImageElement[]>([])
+    const imagesRef = useRef<HTMLCanvasElement[]>([])
     const engineRef = useRef<Matter.Engine>()
     const worldRef = useRef<Matter.World>()
     const runnerRef = useRef<Matter.Runner>()
@@ -39,8 +39,8 @@ const FireworksCanvas = forwardRef<FireworksCanvasHandle, object>(
     const createFirework = useCallback(
       (x: number, y: number, numParticles: number = 50) => {
         const newParticles: Particle[] = []
-        const loadedImages = imagesRef.current
-        if (loadedImages.length === 0) return
+        const loadedCanvases = imagesRef.current
+        if (loadedCanvases.length === 0) return
 
         for (let i = 0; i < numParticles; i++) {
           const angle = Math.random() * Math.PI // 위쪽 반원 방향
@@ -49,9 +49,9 @@ const FireworksCanvas = forwardRef<FireworksCanvasHandle, object>(
             x: Math.cos(angle) * speed,
             y: -Math.sin(angle) * speed, // 위로 향하도록 y 속도 음수
           }
-          // 랜덤하게 이미지 선택
-          const randomImage =
-            loadedImages[Math.floor(Math.random() * loadedImages.length)]
+          // 랜덤하게 이미지 캔버스 선택
+          const randomImageCanvas =
+            loadedCanvases[Math.floor(Math.random() * loadedCanvases.length)]
           // 파티클 바디 생성
           const particleBody = Matter.Bodies.circle(x, y, BODY_RADIUS, {
             restitution: 0.7, // 탄성
@@ -62,7 +62,7 @@ const FireworksCanvas = forwardRef<FireworksCanvasHandle, object>(
           Matter.World.add(worldRef.current!, particleBody)
           newParticles.push({
             body: particleBody,
-            image: randomImage,
+            imageCanvas: randomImageCanvas,
           })
         }
         particlesRef.current = [...particlesRef.current, ...newParticles]
@@ -70,7 +70,6 @@ const FireworksCanvas = forwardRef<FireworksCanvasHandle, object>(
       [BODY_RADIUS],
     )
 
-    // 외부에서 호출할 수 있는 메서드 정의
     useImperativeHandle(
       ref,
       () => ({
@@ -167,14 +166,27 @@ const FireworksCanvas = forwardRef<FireworksCanvasHandle, object>(
       resizeCanvas()
       window.addEventListener('resize', resizeCanvas)
 
-      // 이미지 로드 함수
-      const loadImages = (srcs: string[]): Promise<HTMLImageElement[]> => {
+      // 이미지 로드 후 캔버스에 그리기
+      const loadImagesToCanvas = (
+        srcs: string[],
+      ): Promise<HTMLCanvasElement[]> => {
         return Promise.all(
           srcs.map((src) => {
-            return new Promise<HTMLImageElement>((resolve, reject) => {
+            return new Promise<HTMLCanvasElement>((resolve, reject) => {
               const img = new Image()
               img.src = src
-              img.onload = () => resolve(img)
+              img.onload = () => {
+                const offscreenCanvas = document.createElement('canvas')
+                offscreenCanvas.width = IMAGE_SIZE
+                offscreenCanvas.height = IMAGE_SIZE
+                const offscreenCtx = offscreenCanvas.getContext('2d')
+                if (offscreenCtx) {
+                  offscreenCtx.drawImage(img, 0, 0, IMAGE_SIZE, IMAGE_SIZE)
+                  resolve(offscreenCanvas)
+                } else {
+                  reject(new Error('Canvas context is not available'))
+                }
+              }
               img.onerror = () =>
                 reject(new Error(`Failed to load image: ${src}`))
             })
@@ -199,9 +211,9 @@ const FireworksCanvas = forwardRef<FireworksCanvasHandle, object>(
       ]
 
       // 이미지 로드 후 애니메이션 시작
-      loadImages(imagePaths)
-        .then((loadedImages) => {
-          imagesRef.current = loadedImages
+      loadImagesToCanvas(imagePaths)
+        .then((loadedCanvases) => {
+          imagesRef.current = loadedCanvases
           animate()
         })
         .catch((error) => {
@@ -225,7 +237,7 @@ const FireworksCanvas = forwardRef<FireworksCanvasHandle, object>(
           ctx.translate(x, y)
           ctx.rotate(angle)
           ctx.drawImage(
-            p.image,
+            p.imageCanvas,
             -IMAGE_SIZE / 2,
             -IMAGE_SIZE / 2,
             IMAGE_SIZE,
@@ -235,17 +247,24 @@ const FireworksCanvas = forwardRef<FireworksCanvasHandle, object>(
         })
 
         // 파티클 제거 조건 추가
-        // 모든 파티클이 화면 상단을 벗어나면 모든 파티클 제거
         if (
           particlesRef.current.length > 0 &&
           particlesRef.current.every((p) => p.body.position.y <= 0)
         ) {
+          // 모든 파티클 제거
+          particlesRef.current.forEach((p) =>
+            Matter.World.remove(world, p.body),
+          )
           particlesRef.current = []
         } else {
-          // 파티클이 화면 상단을 벗어난 경우 개별 제거
-          particlesRef.current = particlesRef.current.filter(
-            (p) => p.body.position.y > -100,
-          )
+          // 화면 상단을 벗어난 파티클 개별 제거
+          particlesRef.current = particlesRef.current.filter((p) => {
+            const shouldKeep = p.body.position.y > -100
+            if (!shouldKeep) {
+              Matter.World.remove(world, p.body)
+            }
+            return shouldKeep
+          })
         }
 
         animationFrameId.current = requestAnimationFrame(animate)
