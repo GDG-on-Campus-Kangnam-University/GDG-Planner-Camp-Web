@@ -122,8 +122,8 @@ const HomePage = () => {
       )
     }
 
-    updateCountdown()
     const intervalId = setInterval(updateCountdown, 1000)
+    updateCountdown()
 
     return () => clearInterval(intervalId)
   }, [])
