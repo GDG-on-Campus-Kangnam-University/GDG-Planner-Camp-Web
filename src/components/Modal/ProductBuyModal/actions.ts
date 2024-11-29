@@ -88,7 +88,9 @@ export async function purchaseProduct(
       }
 
       if (currentPurchaseCount + validQuantity > model.total_count) {
-        throw new Error('해당 제품의 재고가 부족합니다.')
+        throw new Error(
+          `해당 제품의 재고가 부족합니다. ${currentPurchaseCount}개 남음`,
+        )
       }
 
       // 사용자의 팀과 모델의 팀 비교
