@@ -1,18 +1,34 @@
-// app/statistics/page.tsx
+'use client'
 
 import { getUser } from '@/app/login/actions'
 import UserDepositCard from '@/components/Card/UserDepositCard'
 import { TeamChart } from '@/components/Chart/TeamChart'
-import { getTeamSales } from './actions'
+import { useEffect, useState } from 'react'
+import useSWR from 'swr'
 
-const UserStatisticsPage = async () => {
-  const user = await getUser()
-  const teams = await getTeamSales()
+const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
-  // 사용자의 팀 정보 가져오기
+const StatisticsPage = () => {
+  const { data: teams, error } = useSWR('/api/team-sales', fetcher, {
+    refreshInterval: 10000, // Revalidate every 10 seconds
+  })
+
+  const [user, setUser] = useState(null)
+
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    getUser().then(setUser)
+  }, [])
+
+  if (error) return <div>Failed to load</div>
+  if (!teams || !user) return <div>Loading...</div>
+
+  // Find the user's team
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-expect-error
   const userTeam = teams.find((team) => team.team_id === user.team_id)
 
-  console.log(userTeam)
   return (
     <section className="flex flex-col gap-6">
       <UserDepositCard user={user} userTeam={userTeam} />
@@ -25,4 +41,4 @@ const UserStatisticsPage = async () => {
   )
 }
 
-export default UserStatisticsPage
+export default StatisticsPage

@@ -1,66 +1,64 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
-import { InitialProducts } from '@/app/(user)/product/page'
+import { fetcher } from '@/lib/utils'
 import { useEffect, useRef, useState } from 'react'
+import useSWR from 'swr'
 import { ProductCard } from '../Card/ProductCard'
 
-export const ProductList = ({
-  initialProducts,
-}: {
-  initialProducts: InitialProducts
-}) => {
-  const [products, setProducts] = useState(initialProducts)
-  const [isLoading, setIsLoading] = useState(false)
-  const [page, setPage] = useState(0)
-  const [isLastPage, setIsLastPage] = useState(false)
+export const ProductList = () => {
+  const { data: products, error } = useSWR('/api/products', fetcher, {
+    refreshInterval: 10000, // Re-fetch data every 10 seconds
+  })
+
+  const [page] = useState(0)
   const trigger = useRef<HTMLSpanElement>(null)
 
   useEffect(() => {
+    if (!products) return
+
     const observer = new IntersectionObserver(
-      async (
-        entries: IntersectionObserverEntry[],
-        observer: IntersectionObserver,
-      ) => {
+      async (entries) => {
         const element = entries[0]
         if (element.isIntersecting && trigger.current) {
+          // Load more products when the trigger is visible
           observer.unobserve(trigger.current)
-          setIsLoading(true)
-          //   const newProducts = await getMoreProducts(page + 1);
-          //   if (newProducts.length !== 0) {
-          //     setProducts((prev) => [...prev, ...newProducts]);
-          //     setPage((prev) => prev + 1);
-          //   } else {
-          //     setIsLastPage(true);
-          //   }
-          //   setIsLoading(false);
+          // Implement pagination logic here if needed
+          // For example, fetch the next page of products
         }
       },
       {
         threshold: 1.0,
       },
     )
+
     if (trigger.current) {
       observer.observe(trigger.current)
     }
+
     return () => {
       observer.disconnect()
     }
-  }, [page])
+  }, [products, page])
+
+  if (error) return <div>Failed to load products.</div>
+  if (!products) return <div>Loading products...</div>
 
   return (
     <div className="grid grid-cols-3 gap-x-1.5 gap-y-6 pb-8">
-      {products.map((product) => (
+      {products.map((product: any) => (
         <ProductCard key={product.product_id} {...product} />
       ))}
-      {/* {!isLastPage ? (
+      {/* Infinite scrolling trigger */}
+      {/* Uncomment and adjust if implementing pagination */}
+      {/* {!isLastPage && (
         <span
           ref={trigger}
           className="text-sm font-semibold bg-orange-500 w-fit mx-auto px-3 py-2 rounded-md hover:opacity-90 active:scale-95"
         >
-          {isLoading ? "로딩 중" : "Load more"}
+          Load more
         </span>
-      ) : null} */}
+      )} */}
     </div>
   )
 }
