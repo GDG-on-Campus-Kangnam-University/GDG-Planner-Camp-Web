@@ -17,7 +17,7 @@ const UserStatisticsPage = async () => {
     <section className="flex flex-col gap-6">
       <UserDepositCard user={user} userTeam={userTeam} />
       <hr />
-      <main className="flex h-full flex-col">
+      <main className="flex h-full flex-col p-8">
         <h1 className="p-6 font-[600]">Overview</h1>
         <TeamChart salesData={teams} user={user} />
       </main>

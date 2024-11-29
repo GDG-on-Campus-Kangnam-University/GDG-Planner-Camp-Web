@@ -292,13 +292,13 @@ const HomePage = () => {
           </div>
         </div>
         <div className="flex w-full flex-col gap-4">
-          <Link target="_blank" href="https://forms.gle/D8VQnaCvFCgcb6Tj7">
+          {/* <Link target="_blank" href="https://forms.gle/D8VQnaCvFCgcb6Tj7">
             <Button className="w-full bg-blue-500 py-2 text-white hover:bg-blue-400">
               지금 바로 신청하기
             </Button>
-          </Link>
+          </Link> */}
           <Link href="/product">
-            <Button className="w-full bg-gray-300 py-2 text-white hover:bg-gray-200">
+            <Button className="w-full bg-blue-400 py-2 text-white hover:bg-gray-200">
               사용자 로그인
             </Button>
           </Link>

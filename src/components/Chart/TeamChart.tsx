@@ -4,14 +4,7 @@
 
 import { User } from '@prisma/client'
 import React from 'react'
-import {
-  Bar,
-  BarChart,
-  Cell,
-  ResponsiveContainer,
-  XAxis,
-  YAxis,
-} from 'recharts'
+import { Bar, BarChart, Cell, ResponsiveContainer, YAxis } from 'recharts'
 
 interface TeamSales {
   team_id: string
@@ -29,7 +22,7 @@ export const TeamChart: React.FC<{ salesData: TeamSales[]; user: User }> = ({
   return (
     <ResponsiveContainer width="100%" height={600}>
       <BarChart data={salesData}>
-        <XAxis dataKey="name" />
+        {/* <XAxis dataKey="name" /> */}
         <YAxis domain={[0, 'auto']} tick={{ fontSize: 12 }} />
         <Bar dataKey="total_sales" barSize={80} radius={[4, 4, 4, 4]}>
           {salesData.map((entry, index) => (
