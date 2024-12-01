@@ -31,11 +31,11 @@ export const ProductCard = (product: ProductProps) => {
         {/* 상태 배지 */}
         {!isAvailable && (
           <div
-            className={`absolute left-2 top-2 rounded bg-gray-400 px-2 py-1 text-xs font-bold text-white`}
+            className={`absolute left-2 top-2 rounded ${product.status === ProductStatus.WAITING ? 'bg-gray-400' : 'bg-gray-700'} px-2 py-1 text-xs font-bold text-white`}
           >
             {product.status === ProductStatus.WAITING
               ? '판매 대기중'
-              : '판매 종료'}
+              : '품절 상품'}
           </div>
         )}
         {product.status === ProductStatus.NEW && (
@@ -58,6 +58,8 @@ export const ProductCard = (product: ProductProps) => {
   return isAvailable ? (
     <Link href={`/product/${product.product_id}`}>{ProductContent}</Link>
   ) : (
-    <div className="cursor-not-allowed">{ProductContent}</div>
+    <Link href={`/product/${product.product_id}`}>
+      <div className="cursor-not-allowed">{ProductContent}</div>
+    </Link>
   )
 }
