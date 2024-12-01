@@ -7,7 +7,7 @@ const UserLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="flex min-h-screen justify-center bg-gray-50">
       <div className="min-h-screen w-[600px] bg-white">
-        <header className="fixed flex w-full max-w-[600px] justify-between border-b border-gray-300 bg-white px-6 py-4">
+        <header className="fixed z-50 flex w-full max-w-[600px] justify-between border-b border-gray-300 bg-white px-6 py-4">
           <Link href="/product">
             <Image
               src="/image/gdg_icon.svg"
