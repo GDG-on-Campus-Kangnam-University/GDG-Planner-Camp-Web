@@ -20,13 +20,14 @@ export const ProductCard = (product: ProductProps) => {
 
   const ProductContent = (
     <div className="relative flex flex-col gap-2">
-      <div className="relative">
+      <div className="relative h-44">
         <Image
           src={product.picture}
           alt="상품 이미지"
-          width={197}
-          height={236}
           className={`rounded-md ${!isAvailable ? 'opacity-60' : ''}`}
+          layout="fill" // 컨테이너에 꽉 차게 설정
+          objectFit="cover" // 1:1 비율로 유지
+          objectPosition="center" // 가운데 정렬
         />
         {/* 상태 배지 */}
         {!isAvailable && (
